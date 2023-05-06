@@ -2,7 +2,7 @@ import os
 import shutil
 
 
-def find_lang(beta=True):
+def find(beta=True):
     folder_path_pre = r"C:\Program Files\WindowsApps"
     find_list = os.listdir(folder_path_pre)
     file_path = r"data\resource_packs"
@@ -24,9 +24,9 @@ def find_lang(beta=True):
         return folder_path, version_internal
 
 
-def copy_lang(origin_path,
-              target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
-              target_folder="text"):
+def copy(origin_path,
+         target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
+         target_folder="text"):
     target_folder_path = os.path.join(target_path, target_folder)
     file_names = os.listdir(origin_path)
     shutil.rmtree(target_folder_path)
@@ -47,7 +47,7 @@ def copy_lang(origin_path,
                 shutil.copy(zh_lang, subfolder_path)
 
 
-def transform_version(version_internal, beta=True):
+def trans_ver(version_internal, beta=True):
     ver = version_internal.split(".")
     ver_1 = int(ver[0])
     ver_2 = int(ver[1])
@@ -61,21 +61,23 @@ def transform_version(version_internal, beta=True):
     return version
 
 
-def update_readme(version, target_path):
+def readme(version, target_path):
     readme_path = os.path.join(target_path, "README.md")
     with open(readme_path, "r") as f:
         line = f.readlines()
+        f.close()
     line[1] = f"Version: {version}"
     with open(readme_path, "w") as f:
         f.writelines(line)
+        f.close()
 
 
 def update_lang(beta=True,
                 target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
-    fd_path, version_in = find_lang(beta)
+    fd_path, version_in = find(beta)
     if fd_path is None:
         return
-    version = transform_version(version_in, beta)
+    version = trans_ver(version_in, beta)
     print(version)
-    copy_lang(fd_path, target_path, "text")
-    update_readme(version, target_path)
+    copy(fd_path, target_path, "text")
+    readme(version, target_path)
