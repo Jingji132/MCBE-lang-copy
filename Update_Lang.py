@@ -29,8 +29,10 @@ def copy(origin_path,
          target_folder="text"):
     target_folder_path = os.path.join(target_path, target_folder)
     file_names = os.listdir(origin_path)
-    shutil.rmtree(target_folder_path)
-    os.makedirs(target_folder_path)
+    if os.path.isdir(target_folder_path):
+        shutil.rmtree(target_folder_path)
+    else:
+        os.makedirs(target_folder_path)
     for file_name in file_names:
         en_lang = os.path.join(origin_path, file_name, r"texts\en_US.lang")
         zh_lang = os.path.join(origin_path, file_name, r"texts\zh_CN.lang")
@@ -63,6 +65,9 @@ def trans_ver(version_internal, beta=True):
 
 def readme(version, target_path):
     readme_path = os.path.join(target_path, "README.md")
+    if not os.path.exists(readme_path):
+        print("未找到 README.md，已跳过相关操作")
+        return
     with open(readme_path, "r") as f:
         line = f.readlines()
         f.close()
