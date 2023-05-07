@@ -15,6 +15,29 @@ default_template = [
 ]
 
 
+def read(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
+    template_file = os.path.join(origin_path, "template")
+    try:
+        if os.path.isfile(template_file):
+            with open(template_file, 'rb+') as f:
+                template = pickle.load(f)
+                f.close()
+        else:
+            print("未找到模板文件，将替换为默认模板！")
+            template = default_template
+    except EOFError:
+        print("出错了，将替换为默认模板！")
+        template = default_template
+    return template
+
+
+def save(template, origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
+    template_file = os.path.join(origin_path, "template")
+    with open(template_file, 'wb') as f:
+        pickle.dump(template, f)
+        f.close()
+
+
 def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
            path_append_list=None, deny_list=None):
     path = [os.path.join(origin_path, "text")]
@@ -23,17 +46,7 @@ def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
         for append in path_append_list:
             path.append(os.path.join(origin_path, append))
             file_class.append(append)
-    template_file = os.path.join(origin_path, "template")
-    try:
-        if os.path.isfile(template_file):
-            with open(template_file, 'rb+') as f:
-                template = pickle.load(f)
-                f.close()
-        else:
-            template = default_template
-    except EOFError:
-        template = default_template
-
+    template = read(origin_path)
     if deny_list is None:
         deny_list = ["education", "education_demo", "previewapp", "vanilla_base", "vanilla_vr"]
     known_list = []
@@ -64,9 +77,7 @@ def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
                     modify = input("\n输入有误，请重新输入(Y/n)：")
             template[j].append([folder, display, file_class[j]])
     if save_template:
-        with open(template_file, 'wb') as f:
-            pickle.dump(template, f)
-            f.close()
+        save(template, origin_path)
     # print(template)
     template_final = []
     print("模板顺序：")
@@ -79,22 +90,7 @@ def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
 
 
 def modify(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
-    template_file = os.path.join(path, "template")
-
-    def temp_find():
-        try:
-            if os.path.isfile(template_file):
-                with open(template_file, 'rb+') as f:
-                    temp = pickle.load(f)
-                    f.close()
-            else:
-                print("未找到模板文件，将替换为默认模板！")
-                temp = default_template
-        except EOFError:
-            print("出错了！")
-            return
-        print("当前模板：\n", temp)
-        return temp
+    global i, j
 
     def mod_find():
         i_num = 0
@@ -109,81 +105,103 @@ def modify(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
         return None, None
 
     def mod_display(i, j):
-        display = input("显示名称更改为：")
-        if display == '0':
+        display = input("显示名称 [返回(Enter)]：")
+        if display == '':
+            return False
+        elif display == '0':
             display = 0
         template[i][j][1] = display
         print("当前模板：\n", template)
+        return True
 
     def mod_locate(i, j):
+        j_o = j
         while True:
-            move = input("[前移(A)] [后移(D)] [返回(B)]：")
+            move = input("[前移(A)] [后移(D)] [返回(Enter)]：")
             if move in ['a', 'A'] and j != 0:
                 t = template[i][j - 1]
                 template[i][j - 1] = template[i][j]
                 template[i][j] = t
+                j -= 1
                 print("当前模板：\n", template)
             elif move in ['d', 'D'] and j != len(template[i]):
                 t = template[i][j + 1]
                 template[i][j + 1] = template[i][j]
                 template[i][j] = t
+                j += 1
                 print("当前模板：\n", template)
-            elif move in ['b', 'B']:
-                return
+            elif move == '':
+                if j_o == j:
+                    return False
+                else:
+                    return True
             else:
                 continue
 
     def mod_delete(i, j):
-        del template[i][j]
-        print("当前模板：\n", template)
+        info = "确认要删除" + template[i][j][0] + "吗？[确认(Yes)] [取消(任意)]"
+        confirm = input(info)
+        if confirm in ['Yes', 'yes']:
+            del template[i][j]
+            print("当前模板：\n", template)
+            return True
+        else:
+            print("已取消删除")
+            return False
 
-    template = temp_find()
-
+    template = read(path)
+    old_template = template
+    print("当前模板：\n", template)
+    old_finished = True
     while True:
+        break_flag = False
         while True:
-            name = input("修改内容 [退出(0)]：")  # experimental_cameras
-            if name == '0':
+            if not old_finished:
+                break
+            name = input("修改内容 [退出(Enter)]：")  # 例如：experimental_cameras，若直接回车则退出
+            if name == '':
                 print("退出")
-                return
+                break_flag = True
+                break
             i, j = mod_find()
             if i is not None:
                 break
+        if break_flag:
+            break
         while True:
-            mod_num = int(input("[取消(0)] [修改名称(1)] [移动位置(2)] [删除(3)]："))
-            if mod_num in range(4):
+            mod_num = 0
+            mod = input("[取消(Enter)] [修改名称(1)] [移动位置(2)] [删除(3)]：")
+            if mod == '':
+                old_finished = True
+                break
+            elif int(mod) in range(4):
+                mod_num = int(mod)
                 break
             else:
                 print("请输入正确的数字！")
-        if mod_num == 0:
-            print("未进行更改！")
-        elif mod_num == 1:
-            mod_display(i, j)
-        elif mod_num == 2:
-            mod_locate(i, j)
-        elif mod_num == 3:
-            mod_delete(i, j)
-        cont = input("继续更改？[确认(Y)][取消(任意)]")
-        if cont in ['y', 'Y']:
+        if mod == '' or mod_num == 0:
             continue
+        elif mod_num == 1:
+            old_finished = mod_display(i, j)
+        elif mod_num == 2:
+            old_finished = mod_locate(i, j)
+        elif mod_num == 3:
+            old_finished = mod_delete(i, j)
+    if template == old_template:
+        print("未更改")
+        return
+    else:
+        save_temp = input("保存更改？[确认(Y)][取消(任意)]")
+        if save_temp in ['y', 'Y']:
+            save(template, path)
+            print("已保存\n当前模板：\n", template)
         else:
-            break
-
-    print("当前模板：\n", template)
-    with open(template_file, 'wb') as f:
-        pickle.dump(template, f)
-        f.close()
+            print("未更改")
+            return
 
 
-temp = [
-    ["vanilla", 0, 0],
-    ["oreui", "Ore UI", 0],
-    ["persona", 0, 0],
-    ["editor", 0, 0],
-    ["experimental_cameras", 0, 0],
-    ["chemistry", 0, 0],
-    ["custom", 0, "other"]
-]
+
 
 # update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
 #        path_append_list=["other"])
-modify()
+# modify()
