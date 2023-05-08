@@ -1,16 +1,18 @@
 import Update_Lang
 import Produce_Lang
 import Generate_Template
+import trivial
 
 
-def update_mc_lang(beta=True, target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", mod=False):
+def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", beta=True, mod=False):
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
         return
     version = Update_Lang.trans_ver(version_in, beta)
-    print("游戏版本：", version)
+    print("游戏版本：", version, "\n")
     Update_Lang.copy(fd_path, target_path, "text")
     Update_Lang.readme(version, target_path)
+    trivial.update_custom_tips(target_path)
     merged_file = f"{version}_merged.lang"
     template = Generate_Template.update(target_path, path_append_list=["other"])
     Produce_Lang.save(template, path=target_path, path_append="other", file_name=merged_file)
@@ -30,6 +32,6 @@ temp = [
     ["custom", 0, "other"]
 ]
 
-update_mc_lang(beta=True,
-               target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_test",
-               mod=True)
+update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang",
+               beta=True,
+               mod=False)
