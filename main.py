@@ -22,16 +22,6 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
                          path=target_path, path_append="other")
 
 
-temp = [
-    ["vanilla", 0, 0],
-    ["oreui", "Ore UI", 0],
-    ["persona", 0, 0],
-    ["editor", 0, 0],
-    ["experimental_cameras", 0, 0],
-    ["chemistry", 0, 0],
-    ["custom", 0, "other"]
-]
-
 update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang",
                beta=True,
                mod=False)
