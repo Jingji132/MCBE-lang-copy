@@ -1,4 +1,34 @@
 import os
+from random import randint
+import requests
+import difflib
+
+
+def find_in_dict(the_dict, key, full=True):
+    if key in the_dict:
+        if full:
+            return the_dict[key]
+        else:
+            return the_dict[key][0]
+    else:
+        return ''
+
+
+def fuzzy_matching(texts_list, value, similarity=0.8, max=1):
+    texts_score = {}
+    for i in texts_list:
+        score = difflib.SequenceMatcher(None, i, value).quick_ratio()
+        if score < similarity:
+            continue
+        texts_score[i] = score
+        if score > max:
+            break
+    texts_score = sorted(texts_score.items(), key=lambda x: x[1], reverse=False)
+    if len(texts_score) > 0:
+        match_value = texts_score[-1][0]
+        return match_value, texts_score[-1][1]
+    else:
+        return '', 0
 
 
 def update_custom_tips(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
@@ -52,4 +82,21 @@ def update_custom_tips(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_tes
         f.close()
 
 
-# update_custom_tips()
+def get_url(url, time_set=200):
+    headers = {
+        'user-agent': f'Mozilla/5.0 (Linux; Android {randint(6, 14)}; OnePlus {randint(7, 11)}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36'}
+    response = None
+    for time in range(time_set, time_set+3):
+        try:
+            response = requests.get(url, headers=headers, timeout=time)
+            break
+        except:
+            time += 1
+            continue
+    if response is None:
+        print("请求超时！")
+        return None
+    else:
+        return response
+
+# get_url('https://google.com', 5)

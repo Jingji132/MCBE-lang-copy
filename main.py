@@ -8,8 +8,12 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
         return
-    version = Update_Lang.trans_ver(version_in, beta)
+    version, ver = Update_Lang.trans_ver(version_in, beta)
     print("游戏版本：", version, "\n")
+    ver_old = Update_Lang.read_info(beta, target_path, 'object')
+    print(ver_old)
+    if Update_Lang.compare_ver(ver, ver_old):
+        Update_Lang.update_info(beta, target_path, ver, 'object')
     Update_Lang.copy(fd_path, target_path, "text")
     Update_Lang.readme(version, target_path)
     trivial.update_custom_tips(target_path)
@@ -22,6 +26,7 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
                          path=target_path, path_append="other")
 
 
-update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang",
-               beta=True,
-               mod=False)
+update_mc_lang(target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang",     # 提取语言文件至该路径
+               beta=True,       # True:将提取Preview  False:将提取Release
+               mod=False        # 是否修改模板
+               )

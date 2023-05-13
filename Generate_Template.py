@@ -15,7 +15,9 @@ default_template = [
 ]
 
 
-def read(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
+def read(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", append=None):
+    if append is not None:
+        origin_path = os.path.join(origin_path, append)
     template_file = os.path.join(origin_path, "template")
     try:
         if os.path.isfile(template_file):
@@ -31,7 +33,9 @@ def read(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
     return template
 
 
-def save(template, origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
+def save(template, origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", append=None):
+    if append is not None:
+        origin_path = os.path.join(origin_path, append)
     template_file = os.path.join(origin_path, "template")
     with open(template_file, 'wb') as f:
         pickle.dump(template, f)
@@ -46,7 +50,7 @@ def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
         for append in path_append_list:
             path.append(os.path.join(origin_path, append))
             file_class.append(append)
-    template = read(origin_path)
+    template = read(origin_path, 'object')
     if deny_list is None:
         deny_list = ["education", "education_demo", "previewapp", "vanilla_base", "vanilla_vr"]
     known_list = []
@@ -77,7 +81,7 @@ def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
                     modify = input("\n输入有误，请重新输入(Y/n)：")
             template[j].append([folder, display, file_class[j]])
     if save_template:
-        save(template, origin_path)
+        save(template, origin_path, 'object')
     # print(template)
     template_final = []
     print("模板顺序：")
@@ -89,7 +93,7 @@ def update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
     return template_final
 
 
-def modify(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
+def modify(path=r"D:\Users\Economy\git\Gitee\MCBE-lang"):
     global i, j
 
     def mod_find():
@@ -149,8 +153,7 @@ def modify(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
             print("已取消删除")
             return False
 
-    template = read(path)
-    old_template = template
+    template = read(path, "object")
     print("当前模板：\n", template)
     old_finished = True
     while True:
@@ -187,13 +190,14 @@ def modify(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
             old_finished = mod_locate(i, j)
         elif mod_num == 3:
             old_finished = mod_delete(i, j)
+    old_template = read(path, "object")
     if template == old_template:
         print("未更改")
         return
     else:
         save_temp = input("保存更改？[确认(Y)][取消(任意)]")
         if save_temp in ['y', 'Y']:
-            save(template, path)
+            save(template, path, 'object')
             print("已保存\n当前模板：\n", template)
         else:
             print("未更改")

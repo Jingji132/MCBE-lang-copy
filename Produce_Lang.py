@@ -48,12 +48,15 @@ def save(template=None,
 
 def process(origin, processed="processed.lang",
             onlykey="onlykey.lang",
-            path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None):
+            path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None,
+            origin_path=None):
     if path_append is not None:
         path = os.path.join(path, path_append)
+    if origin_path is None:
+        origin_path = path
     if not os.path.exists(path):
         os.makedirs(path)
-    origin_path = os.path.join(path, origin)
+    origin_path = os.path.join(origin_path, origin)
     process_path = os.path.join(path, processed)
     onlykey_path = os.path.join(path, onlykey)
     processed_line = []
@@ -62,10 +65,12 @@ def process(origin, processed="processed.lang",
         line = f.readlines()
         f.close()
     for i in line:
-        processed_line.append(i.replace("=", "\t", 1))
         if "=" in i:
-            onlykey_line.append(i.split("=")[0] + "\n")
+            i = i.replace("\t", "").replace("#", "[TAB]#", 1).replace("=", "[TAB]", 1).replace("[TAB]", "\t")
+            processed_line.append(i)
         else:
+            i = i.replace("\t", " ")
+            processed_line.append(i)
             onlykey_line.append(i)
     with open(process_path, "w", encoding='utf-8') as f:
         f.writelines(processed_line)

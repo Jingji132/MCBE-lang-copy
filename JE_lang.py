@@ -1,34 +1,22 @@
 import os
 import json
 import zipfile
-import requests
-from random import randint
-
-
-def get_url(url, time=5):
-    headers = {
-        'user-agent': f'Mozilla/5.0 (Linux; Android {randint(6, 14)}; OnePlus {randint(7, 11)}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36'}
-    response = None
-    time_set = time
-    for time in range(time, time+10):
-        try:
-            response = requests.get(url, headers=headers, timeout=time)
-            break
-        except:
-            time += 1
-            print('第', time-time_set, '次尝试连接失败')
-            continue
-    if response is None:
-        print("请求超时！")
-        return None
-    else:
-        return response
+import pickle
+from trivial import get_url
 
 
 def find_je_lang(game_path=r"E:\Minecraft\.minecraft", target_path=r"D:\Users\Economy\git\Gitee\MCJE-lang"):
     def get_je_ver():
-        page = get_url('https://piston-meta.mojang.com/mc/game/version_manifest.json')
-        ver = page.json()['versions'][0]['id']
+        page = get_url('https://piston-meta.mojang.com/mc/game/version_manifest.json', 100)
+        if page is None:
+            f = open(r"D:\Users\Economy\git\Gitee\MCJE-lang\ver", 'rb')
+            ver = pickle.load(f)
+            f.close()
+        else:
+            ver = page.json()['versions'][0]['id']
+            f = open(r"D:\Users\Economy\git\Gitee\MCJE-lang\ver", 'wb')
+            pickle.dump(ver, f)
+            f.close()
         return ver
 
     def find_en_us(path):
@@ -60,21 +48,27 @@ def find_je_lang(game_path=r"E:\Minecraft\.minecraft", target_path=r"D:\Users\Ec
             zh_cn_lang = json.load(f)
         return zh_cn_lang
 
-    def create_lang(lang, path, name):
-        file_path = os.path.join(path, name)
-        with open(file_path, 'w', encoding='utf-8') as f:
-            for key in lang:
-                line = key + 'REPLACE' + repr(lang[key]) + 'REPLACE'
-                line = line.replace("REPLACE'", '\t').replace("'REPLACE", '\n')
-                f.writelines(line)
-
     en_us_lang = find_en_us(game_path)
     if en_us_lang is None:
         return
-    create_lang(en_us_lang, target_path, "en_us.lang")
+    # create_lang(en_us_lang, target_path, "en_us.lang")
 
     zh_cn_lang = find_zh_cn(game_path)
-    create_lang(zh_cn_lang, target_path, "zh_cn.lang")
+    # create_lang(zh_cn_lang, target_path, "zh_cn.lang")
+    return en_us_lang, zh_cn_lang
 
 
-find_je_lang()
+def create_lang(lang, path, name):
+    file_path = os.path.join(path, name)
+    with open(file_path, 'w', encoding='utf-8') as f:
+        for key in lang:
+            line = key + 'REPLACE' + repr(lang[key]) + 'REPLACE'
+            if "REPLACE'" in line:
+                line = line.replace("REPLACE'", '\t').replace("'REPLACE", '\n')
+            elif "REPLACE\"" in line:
+                line = line.replace("REPLACE\"", '\t').replace("\"REPLACE", '\n')
+            f.writelines(line)
+
+
+# en_us, zh_cn = find_je_lang()
+

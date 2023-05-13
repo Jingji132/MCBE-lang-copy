@@ -1,5 +1,6 @@
 import os
 import shutil
+import pickle
 
 
 def find(beta=True):
@@ -56,11 +57,12 @@ def trans_ver(version_internal, beta=True):
     ver_combine = int(ver[2])
     ver_3 = ver_combine // 100
     ver_4 = ver_combine % 100
+    ver = [ver_1, ver_2, ver_3, ver_4]
     if beta:
         version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3) + "." + str(ver_4)
     else:
         version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3) + " release"
-    return version
+    return version, ver
 
 
 def readme(version, target_path):
@@ -74,6 +76,48 @@ def readme(version, target_path):
     line[1] = f"Version: {version}"
     with open(readme_path, "w") as f:
         f.writelines(line)
+        f.close()
+
+
+def read_info(beta, path, append=None):
+    if append is not None:
+        path = os.path.join(path, append)
+    if beta:
+        name = 'Preview'
+    else:
+        name = 'Release'
+    path = os.path.join(path, name)
+    if os.path.isfile(path):
+        with open(path, 'rb+') as f:
+            ver = pickle.load(f)
+            f.close()
+    else:
+        ver = [0, 0, 0, 0]
+    return ver
+
+
+def compare_ver(ver1, ver2):
+    for i in range(4):
+        if ver1[i] > ver2[i]:
+            return True
+        elif ver1[i] < ver2[i]:
+            return False
+        else:
+            i += 1
+            continue
+    return False
+
+
+def update_info(beta, path, ver=None, append=None):
+    if append is not None:
+        path = os.path.join(path, append)
+    if beta:
+        name = 'Preview'
+    else:
+        name = 'Release'
+    path = os.path.join(path, name)
+    with open(path, 'wb') as f:
+        pickle.dump(ver, f)
         f.close()
 
 
