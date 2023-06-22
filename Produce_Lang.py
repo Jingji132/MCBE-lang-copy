@@ -68,6 +68,7 @@ def process(origin, processed="processed.lang",
         if "=" in i:
             i = i.replace("\t", "").replace("#", "[TAB]#", 1).replace("=", "[TAB]", 1).replace("[TAB]", "\t")
             processed_line.append(i)
+            onlykey_line.append(i.split('\t')[0])
         else:
             i = i.replace("\t", " ")
             processed_line.append(i)

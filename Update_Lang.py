@@ -79,11 +79,13 @@ def readme(version, target_path):
         f.close()
 
 
-def read_info(beta, path, append=None):
+def read_info(beta, path, append=None, pre=False):
     if append is not None:
         path = os.path.join(path, append)
-    if beta:
+    if beta and not pre:
         name = 'Preview'
+    elif beta and pre:
+        name = 'Pre-release'
     else:
         name = 'Release'
     path = os.path.join(path, name)
@@ -97,22 +99,33 @@ def read_info(beta, path, append=None):
 
 
 def compare_ver(ver1, ver2):
+    flag1 = None
     for i in range(4):
         if ver1[i] > ver2[i]:
-            return True
+            flag1 = True
+            break
+
         elif ver1[i] < ver2[i]:
-            return False
+            flag1 = False
+            break
+
         else:
             i += 1
             continue
-    return False
+    if i < 3:
+        flag2 = True
+    else:
+        flag2 = False
+    return flag1, flag2
 
 
-def update_info(beta, path, ver=None, append=None):
+def update_info(beta, path, ver=None, append=None, pre=False):
     if append is not None:
         path = os.path.join(path, append)
-    if beta:
+    if beta and not pre:
         name = 'Preview'
+    elif beta and pre:
+        name = 'Pre-release'
     else:
         name = 'Release'
     path = os.path.join(path, name)
@@ -130,3 +143,5 @@ def update_lang(beta=True,
     print(version)
     copy(fd_path, target_path, "text")
     readme(version, target_path)
+
+## update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
