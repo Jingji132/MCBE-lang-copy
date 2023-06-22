@@ -65,7 +65,12 @@ def trans_ver(version_internal, beta=True):
     return version, ver
 
 
-def readme(version, target_path):
+def version(ver):
+    version_read = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
+    return version_read
+
+
+def readme(version_read, target_path):
     readme_path = os.path.join(target_path, "README.md")
     if not os.path.exists(readme_path):
         print("未找到 README.md，已跳过相关操作")
@@ -73,7 +78,7 @@ def readme(version, target_path):
     with open(readme_path, "r") as f:
         line = f.readlines()
         f.close()
-    line[1] = f"Version: {version}"
+    line[1] = f"Version: {version_read}"
     with open(readme_path, "w") as f:
         f.writelines(line)
         f.close()
@@ -98,8 +103,8 @@ def read_info(beta, path, append=None, pre=False):
     return ver
 
 
-def compare_ver(ver1, ver2):
-    flag1 = None
+def compare_ver(ver1, ver2, complex_return=True):
+    flag1 = False  # 判断ver1是否大于ver2
     for i in range(4):
         if ver1[i] > ver2[i]:
             flag1 = True
@@ -116,7 +121,10 @@ def compare_ver(ver1, ver2):
         flag2 = True
     else:
         flag2 = False
-    return flag1, flag2
+    if complex_return:
+        return flag1, flag2
+    else:
+        return flag1
 
 
 def update_info(beta, path, ver=None, append=None, pre=False):
@@ -144,4 +152,7 @@ def update_lang(beta=True,
     copy(fd_path, target_path, "text")
     readme(version, target_path)
 
-## update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
+
+# update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 10, 23], 'object', pre=False)
+# update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
+# print(read_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object', pre=False))

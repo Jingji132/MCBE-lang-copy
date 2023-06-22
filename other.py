@@ -1,6 +1,7 @@
 from Update_Lang import read_info
 from mclangcn_process import lang_to_process, processed_to_dict
-from trivial import fuzzy_matching
+from trivial import only_zh_upd
+from git_fun import diff
 from trivial import find_in_dict
 from JE_lang import find_je_lang
 import os
@@ -126,27 +127,38 @@ def create_translate(lang_dict, be_dict, old_dict, old_en_dict, je_en_dict, je_z
     # print(list)
 
 
-# diff_process()
-old_process()
-path = r"D:\Users\Economy\git\Github\mclangcn-update"
-old_path = os.path.join(path, "processed.lang")
+def fun1():
+    # diff_process()
+    old_process()
+    path = r"D:\Users\Economy\git\Github\mclangcn-update"
+    old_path = os.path.join(path, "processed.lang")
 
-path_ver = r"D:\Users\Economy\git\Gitee\MCBE-lang"
-ver = read_info(False, path_ver, 'object')
-version = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + " release"
-name = version + '_processed.lang'
-path1 = r"D:\Users\Economy\git\Gitee\MCBE-lang\other"
-old_en = processed_to_dict(os.path.join(path1, name), True)
+    path_ver = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+    ver = read_info(False, path_ver, 'object')
+    version = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + " release"
+    name = version + '_processed.lang'
+    path1 = r"D:\Users\Economy\git\Gitee\MCBE-lang\other"
+    old_en = processed_to_dict(os.path.join(path1, name), True)
 
-old = processed_to_dict(old_path, True)
-en, zh = read_diff()
-la, co = process_diff(en)
-be_zh, co_zh = process_diff(zh)
-je_en, je_zh = find_je_lang()
-tr_list = create_translate(la, be_zh, old, old_en, je_en, je_zh)
-save_path = os.path.join(path, 'save.lang')
-with open(save_path, 'w', encoding='utf-8') as f:
-    for t_list in tr_list:
-        for t in t_list:
-            f.writelines(t + '\t')
-        f.writelines('\n')
+    old = processed_to_dict(old_path, True)
+    en, zh = read_diff()
+    la, co = process_diff(en)
+    be_zh, co_zh = process_diff(zh)
+    je_en, je_zh = find_je_lang()
+    tr_list = create_translate(la, be_zh, old, old_en, je_en, je_zh)
+    save_path = os.path.join(path, 'save.lang')
+    with open(save_path, 'w', encoding='utf-8') as f:
+        for t_list in tr_list:
+            for t in t_list:
+                f.writelines(t + '\t')
+            f.writelines('\n')
+
+
+def fun2():
+    dl = diff()
+    if only_zh_upd(dl):
+        print("此版本是预发布版！")
+    else:
+        print("此版本不是预发布版！")
+
+fun2()

@@ -35,14 +35,15 @@ def save(template=None,
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     if template is None:
-        template = [["vanilla", 0, 0]]
+        template = [[["vanilla", 0, 0]]]
     file_path = os.path.join(save_path, file_name)
     with open(file_path, "w", encoding='utf-8') as f:
-        for i in template:
-            lang_line = read(sub_folder=i[0], display=i[1], folder=i[2],
-                             path=path)
-            if lang_line:
-                f.writelines(lang_line)
+        for ii in template:
+            for i in ii:
+                lang_line = read(sub_folder=i[0], display=i[1], folder=i[2],
+                                 path=path)
+                if lang_line:
+                    f.writelines(lang_line)
         f.close()
 
 

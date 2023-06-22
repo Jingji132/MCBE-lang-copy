@@ -86,7 +86,7 @@ def get_url(url, time_set=200):
     headers = {
         'user-agent': f'Mozilla/5.0 (Linux; Android {randint(6, 14)}; OnePlus {randint(7, 11)}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36'}
     response = None
-    for time in range(time_set, time_set+3):
+    for time in range(time_set, time_set + 3):
         try:
             response = requests.get(url, headers=headers, timeout=time)
             break
@@ -99,4 +99,10 @@ def get_url(url, time_set=200):
     else:
         return response
 
+
+def only_zh_upd(diff_list):
+    for i in diff_list:
+        if 'en_US.lang' in i:
+            return False
+    return True
 # get_url('https://google.com', 5)
