@@ -1,5 +1,8 @@
 import json
 import os
+import zipfile
+from Update_Lang import read_info, version
+from crowdin import download_translate
 
 
 def lang_to_process(origin, processed="processed.lang",
@@ -103,12 +106,18 @@ def json_to_lang(json_path, lang_path, template):
 
 
 ## process_en_json()
+def crowdin_to_mclangcn():
+    path1 = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\zh-CN\processed.json"
+    path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
+    version_pre = version(read_info(True, r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=True))
+    print(version_pre)
+    path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\other\{version_pre}_processed.lang"
 
-path1 = r"D:\Users\Economy\git\Gitee\lang-crowdin\zh-CN\processed.json"
-path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
-path3 = r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.20.0.25_processed.lang"
-json_to_lang(path1, path2, path3)
+    download_translate()
 
-target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+    json_to_lang(path1, path2, path3)
+
+# target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
 # process_en_json(f"1.20.0.25_processed.lang", path=target_path, path_append="other",
 # json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\processed.json")
+crowdin_to_mclangcn()

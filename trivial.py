@@ -102,7 +102,8 @@ def get_url(url, time_set=200):
 
 def only_zh_upd(diff_list):
     for i in diff_list:
-        if 'en_US.lang' in i:
-            return False
+        for j in i:
+            if 'en_US.lang' in j:
+                return False
     return True
 # get_url('https://google.com', 5)

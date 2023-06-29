@@ -43,13 +43,13 @@ def diff(repo_path=r"D:\Users\Economy\git\Gitee\MCBE-lang", branch_name='Preview
         diff_list = []
 
         if branch:
-            commit = branch.commit
-            parent_commit = commit.parents[0] if commit.parents else None
+            commit_ = branch.commit
+            parent_commit = commit_.parents[0] if commit_.parents else None
 
             if parent_commit:
-                diff = parent_commit.diff(commit)
+                diff_ = parent_commit.diff(commit_)
 
-                for change in diff:
+                for change in diff_:
                     diff_list.append([change.change_type, change.a_path, change.b_path])
             else:
                 print("The branch does not have a parent commit.")
