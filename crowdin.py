@@ -170,7 +170,7 @@ def update_branch(branch, version, reset=False):
 def download_translate():
     init(version_type='Pre-Release')
     response = client.translations.build_project_file_translation(project_id, file_id, targetLanguageId='zh-CN')
-    file_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\zh-CN\processed.zip"
+    file_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\zh-CN\processed.json"
     print(response)
     # 下载链接
     download_url = response['data']['url']

@@ -120,4 +120,4 @@ def crowdin_to_mclangcn():
 # target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
 # process_en_json(f"1.20.0.25_processed.lang", path=target_path, path_append="other",
 # json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\processed.json")
-crowdin_to_mclangcn()
+# crowdin_to_mclangcn()

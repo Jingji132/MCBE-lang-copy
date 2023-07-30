@@ -153,6 +153,6 @@ def update_lang(beta=True,
     readme(version, target_path)
 
 
-# update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 10, 23], 'object', pre=False)
+# update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 20, 20], 'object', pre=False)
 # update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
 # print(read_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object', pre=False))

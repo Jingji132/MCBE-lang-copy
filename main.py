@@ -1,7 +1,10 @@
+
 import Update_Lang
 import Produce_Lang
+
 import Generate_Template
 import Process_json
+
 import trivial
 import git_fun
 import crowdin
@@ -80,8 +83,8 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
     crowdin.update_branch(version_type, version, reset=preview_reset)
 
     # 更新版本信息
-    upd_success = input("更新版本号？(Y/N)")
-    if compare and upd_success in ['Y', 'y']:
+    # upd_success = input("更新版本号？(Y/N)")
+    if compare:
         Update_Lang.update_info(beta, target_path, ver, 'object')
 
 
