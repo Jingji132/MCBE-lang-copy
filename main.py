@@ -90,7 +90,7 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
 
 target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang"
 update_mc_lang(target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang",  # 提取语言文件至该路径
-               # beta=False,  # True:将提取Preview  False:将提取Release
+               beta=False,  # True:将提取Preview  False:将提取Release
                mod=True  # 是否修改模板
                )
 

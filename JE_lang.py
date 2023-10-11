@@ -2,6 +2,7 @@ import os
 import json
 import zipfile
 import pickle
+import csv
 from trivial import get_url
 
 
@@ -70,5 +71,33 @@ def create_lang(lang, path, name):
             f.writelines(line)
 
 
-# en_us, zh_cn = find_je_lang()
+def translate_memory(en, zh, _path, name):
+    the_list = ['en,zh-CN\n']
+    for key in zh:
+        _str = 'REPLACE' + repr(en[key]) + 'REPLACE,REPLACE' + repr(zh[key]) + 'REPLACE\n'
+        _str = _str.replace('REPLACE\'', '').replace('\'REPLACE', '')
+        if "REPLACE\"" in _str:
+            _str = _str.replace('REPLACE\"', '').replace('\"REPLACE', '')
+        the_list.append(_str)
+    _path = os.path.join(_path, name)
+    with open(_path, 'w+', encoding='utf-8') as f:
+        f.writelines(the_list)
 
+
+def translate_memory2(en, zh, _path, name):
+    headers = ['en', 'zh-CN']
+    rows = []
+    for key in zh:
+        rows.append((en[key], zh[key]))
+    _path = os.path.join(_path, name)
+    with open(_path, 'w', encoding='utf-8', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+        writer.writerows(rows)
+
+
+en_us, zh_cn = find_je_lang()
+path = r"D:\Users\Economy\git\Gitee\MCJE-lang"
+# create_lang(en_us, path, 'en_US.lang')
+# create_lang(zh_cn, path, 'zh_CN.lang')
+translate_memory2(en_us, zh_cn, path, 'output.csv')
