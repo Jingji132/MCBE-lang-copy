@@ -113,7 +113,7 @@ def crowdin_to_mclangcn(pre=True):
         ver = ''
     path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\zh-CN\processed.json"
     path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
-    version_pre = version(read_info(True, r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=True))
+    version_pre = version(read_info(True, r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=True)['ver'])
     print(version_pre)
     path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\other\{version_pre}_processed.lang"
 
