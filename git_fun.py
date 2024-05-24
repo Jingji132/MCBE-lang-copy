@@ -1,4 +1,9 @@
+import os
+import pickle
+
 from git import Repo
+
+import Update_Lang
 
 
 def switch(repo_path, new_branch):
@@ -63,7 +68,39 @@ def diff(repo_path=r"D:\Users\Economy\git\Gitee\MCBE-lang", branch_name='Preview
     # print(list)
     return diff_list
 
-# diff()
+
+def diff_info(list_new, ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\diff_info"):
+    if os.path.isfile(path):
+        with open(path, 'rb+') as f:
+            info = pickle.load(f)
+            f.close()
+        if 'ver' in info:
+            ver_old = info['ver']
+            if Update_Lang.compare_ver(ver, ver_old, complex_return=False):
+                info = {'ver': ver, 'list': list_new}
+                with open(path, 'wb') as f:
+                    pickle.dump(info, f)
+                    f.close()
+            return info['list']
+        else:
+            print("diff_info: Format incorrect")
+    else:
+        print("diff_info: Not found")
+
+
+print(diff())
 # commit(r"D:\Users\Economy\git\Gitee\mcbe-lang-copy", '.', 'Update')
-target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+# target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
 # switch(target_path, 'Release')
+
+
+# path1 = r"D:\Users\Economy\git\Gitee\MCBE-lang\object\diff_info"
+# info1 = {'ver': [0, 0, 0, 0], 'list': []}
+# with open(path1, 'wb') as f:
+#     pickle.dump(info1, f)
+#     f.close()
+# print(diff_info([0,0,0,0,'shw22w222'], [0,1,0,101]))
+# with open(path1, 'rb+') as f:
+#     info1 = pickle.load(f)
+#     f.close()
+# print(info1)

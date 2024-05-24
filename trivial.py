@@ -106,4 +106,23 @@ def only_zh_upd(diff_list):
             if 'en_US.lang' in j:
                 return False
     return True
+
+
 # get_url('https://google.com', 5)
+def test_for_copy2():
+    paths = os.walk(r"C:\Program Files\WindowsApps\Microsoft.MinecraftWindowsBeta_1.20.5022.0_x64__8wekyb3d8bbwe\data\resource_packs")
+    print('\n')
+    path_list = []
+    for path, dir_lst, file_lst in paths:
+        for dir_name in dir_lst:
+            if dir_name == 'texts':
+                path_list.append(os.path.join(path, dir_name))
+    for path in path_list:
+        short_path = path.split(r"x64__8wekyb3d8bbwe\data\resource_packs")[1]
+        stp = short_path.replace("\\", '', 1).replace(r'\texts', '', 1)
+        stp_ = stp.replace('\\','_')
+        print(stp_)
+
+
+
+test_for_copy2()

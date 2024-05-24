@@ -50,6 +50,39 @@ def copy(origin_path,
                 shutil.copy(zh_lang, subfolder_path)
 
 
+def copy2(origin_path,
+          target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
+          target_folder="text"):
+    target_folder_path = os.path.join(target_path, target_folder)
+    paths = os.walk(origin_path)
+    path_list = []
+    for path, dir_lst, file_lst in paths:
+        for dir_name in dir_lst:
+            if dir_name == 'texts':
+                path_list.append(os.path.join(path, dir_name))
+    if os.path.isdir(target_folder_path):
+        shutil.rmtree(target_folder_path)
+    else:
+        os.makedirs(target_folder_path)
+    for texts_path in path_list:
+        en_lang = os.path.join(texts_path, "en_US.lang")
+        zh_lang = os.path.join(texts_path, "zh_CN.lang")
+        en_exist = os.path.isfile(en_lang)
+        zh_exist = os.path.isfile(zh_lang)
+        if not (en_exist or zh_exist):
+            continue
+        else:
+            short_path = texts_path.split(r"x64__8wekyb3d8bbwe\data\resource_packs")[1]
+            stp = short_path.replace("\\", '', 1).replace(r'\texts', '', 1)
+            stp_ = stp.replace('\\', '_')
+            subfolder_path = os.path.join(target_folder_path, stp_)
+            os.makedirs(subfolder_path)
+            if en_exist:
+                shutil.copy(en_lang, subfolder_path)
+            if zh_exist:
+                shutil.copy(zh_lang, subfolder_path)
+
+
 def trans_ver(version_internal, beta=True):
     ver = version_internal.split(".")
     ver_1 = int(ver[0])
@@ -96,11 +129,11 @@ def read_info(beta, path, append=None, pre=False):
     path = os.path.join(path, name)
     if os.path.isfile(path):
         with open(path, 'rb+') as f:
-            ver = pickle.load(f)
+            info = pickle.load(f)
             f.close()
     else:
-        ver = [0, 0, 0, 0]
-    return ver
+        info = None
+    return info
 
 
 def compare_ver(ver1, ver2, complex_return=True):
@@ -127,7 +160,7 @@ def compare_ver(ver1, ver2, complex_return=True):
         return flag1
 
 
-def update_info(beta, path, ver=None, append=None, pre=False):
+def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=None):
     if append is not None:
         path = os.path.join(path, append)
     if beta and not pre:
@@ -137,8 +170,20 @@ def update_info(beta, path, ver=None, append=None, pre=False):
     else:
         name = 'Release'
     path = os.path.join(path, name)
+
+    with open(path, 'rb+') as f:
+        info = pickle.load(f)
+        f.close()
+    # info={}
+    if isinstance(git, bool):
+        info['git'] = git
+    if isinstance(crowdin, bool):
+        info['crowdin'] = crowdin
+    if isinstance(ver, list):
+        info['ver'] = ver
+
     with open(path, 'wb') as f:
-        pickle.dump(ver, f)
+        pickle.dump(info, f)
         f.close()
 
 
@@ -156,3 +201,5 @@ def update_lang(beta=True,
 # update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 20, 20], 'object', pre=False)
 # update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
 # print(read_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object', pre=False))
+# target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+# print(read_info(True, target_path, 'object', pre=True))

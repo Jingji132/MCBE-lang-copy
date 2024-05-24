@@ -57,14 +57,14 @@ def processed_to_dict(lang_path, simple=False):
 
 
 def process_zh_json():
-    path = r"D:\Users\Economy\git\GitHub\test2\processed.lang"
-    path1 = r"D:\Users\Economy\git\Gitee\lang-crowdin\en\processed.json"
     path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts"
     path3 = r"D:\Users\Economy\git\Gitee\lang-crowdin\en"
+    path4 = os.path.join(path3, 'processed.lang')
+    path1 = os.path.join(path3, 'processed.json')
 
     lang_to_process('zh_CN.lang', origin_path=path2, path=path3)
     with open(path1, 'w+', encoding='utf-8') as f:
-        json.dump(processed_to_dict(path, True), f, ensure_ascii=False)
+        json.dump(processed_to_dict(path4, True), f, ensure_ascii=False)
 
 
 def process_en_json(process, path=r"D:\Users\Economy\git\Gitee\MCBE-lang", path_append=None,
@@ -85,18 +85,18 @@ def json_to_lang(json_path, lang_path, template):
         lines = f.readlines()
     lang = []
     for l in lines:
-        list = l.split('\t')
-        if '#' in list[0]:
+        l_list = l.split('\t')
+        if '#' in l_list[0]:
             lang.append(l)
             continue
-        elif list[0] in lang_dict:
-            list[1] = lang_dict[list[0]]
-            if len(list) == 2:
-                lzh = list[0] + '=' + list[1] + '\t#\n'
-            elif len(list) == 3:
-                lzh = list[0] + '=' + list[1] + '\t#' + list[2]
+        elif l_list[0] in lang_dict:
+            l_list[1] = lang_dict[l_list[0]]
+            if len(l_list) == 2:
+                lzh = l_list[0] + '=' + l_list[1] + '\t#\n'
+            elif len(l_list) == 3:
+                lzh = l_list[0] + '=' + l_list[1] + '\t#' + l_list[2]
             else:
-                print("出错：" + list[0])
+                print("出错：" + l_list[0])
                 lzh = l
             lang.append(lzh)
         else:
@@ -106,8 +106,12 @@ def json_to_lang(json_path, lang_path, template):
 
 
 ## process_en_json()
-def crowdin_to_mclangcn():
-    path1 = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\zh-CN\processed.json"
+def crowdin_to_mclangcn(pre=True):
+    if pre:
+        ver = 'Pre-'
+    else:
+        ver = ''
+    path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\zh-CN\processed.json"
     path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
     version_pre = version(read_info(True, r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=True))
     print(version_pre)
@@ -117,7 +121,18 @@ def crowdin_to_mclangcn():
 
     json_to_lang(path1, path2, path3)
 
+
 # target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
 # process_en_json(f"1.20.0.25_processed.lang", path=target_path, path_append="other",
 # json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\processed.json")
 # crowdin_to_mclangcn()
+
+# process_zh_json()
+
+# path_lang = r"D:\test"  # ←←←要读取的lang文件所在路径（不含文件名称）
+# path_save = r"D:\test"  # ←←←要保存的json文件所在路径（不含文件名称）
+# lang_to_process('en_US.lang', "processed.lang", path=path_save, origin_path=path_lang)
+# # ↑↑↑首个参数是要读取的lang文件名称，当前为”en_US.lang“↑↑↑
+# process_en_json("processed.lang", path=path_save, json_path=os.path.join(path_save, 'processed.json'))
+# # ↑↑↑末尾位置的”processed.json“是要保存的json文件名称↑↑↑
+# #

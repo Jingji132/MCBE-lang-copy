@@ -33,10 +33,10 @@ def read(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", app
     return template
 
 
-def save(template, origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", append='object'):
+def save(template, origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", append='object', name="template"):
     if append is not None:
         origin_path = os.path.join(origin_path, append)
-    template_file = os.path.join(origin_path, "template")
+    template_file = os.path.join(origin_path, name)
     with open(template_file, 'wb') as f:
         pickle.dump(template, f)
         f.close()
@@ -198,8 +198,6 @@ def modify(path=r"D:\Users\Economy\git\Gitee\MCBE-lang"):
         else:
             print("未更改")
             return
-
-
 
 
 # update(origin_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
