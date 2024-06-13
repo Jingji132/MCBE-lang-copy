@@ -161,20 +161,25 @@ def compare_ver(ver1, ver2, complex_return=True):
 
 
 def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=None):
+    # print(beta, pre)
     if append is not None:
         path = os.path.join(path, append)
-    if beta and not pre:
-        name = 'Preview'
-    elif beta and pre:
+    if beta and pre:
         name = 'Pre-release'
+    elif beta and not pre:
+        name = 'Preview'
     else:
         name = 'Release'
-    path = os.path.join(path, name)
-
-    with open(path, 'rb+') as f:
-        info = pickle.load(f)
-        f.close()
-    # info={}
+    path2 = os.path.join(path, name)
+    # print(name)
+    try:
+        with open(path2, 'rb+') as f:
+            info = pickle.load(f)
+            f.close()
+    except FileNotFoundError:
+        info = {'git': False, 'crowdin': False, 'ver': [0, 0, 0, 0]}
+        if not os.path.isdir(path):
+            os.makedirs(path)
     if isinstance(git, bool):
         info['git'] = git
     if isinstance(crowdin, bool):
@@ -182,9 +187,10 @@ def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=
     if isinstance(ver, list):
         info['ver'] = ver
 
-    with open(path, 'wb') as f:
+    with open(path2, 'wb') as f:
         pickle.dump(info, f)
         f.close()
+
 
 
 def update_lang(beta=True,

@@ -7,7 +7,7 @@ from crowdin_api.api_resources.source_files.enums import BranchPatchPath
 from crowdin_api.api_resources.source_files.types import BranchPatchRequest
 
 # 读取配置文件
-with open("config.json", "r") as config_file:
+with open(r"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config.json", "r") as config_file:
     config_data = json.load(config_file)
 token = config_data["token"]
 project_id = 590029
@@ -21,7 +21,7 @@ def init(version_type='Preview'):
     file_dict = get_file()
     if version_type in file_dict:
         file_id = file_dict[version_type]
-        print("version_type:", version_type, "\nfile_id:", file_id)
+        print("Current version_type:", version_type, "\tfile_id:", file_id)
     else:
         print("版本类型有误！")
         return False
@@ -138,7 +138,7 @@ def update_branch(branch, version, reset=False):
             old_name = b
             b_id = b_dict[b]
     new_name = f"{branch} ({version})"
-    print(old_name, b_id, new_name)
+    print('Rename: ', old_name, b_id, new_name)
 
     # 更新分支
     rename_branch(b_id, new_name)

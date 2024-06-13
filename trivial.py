@@ -124,5 +124,5 @@ def test_for_copy2():
         print(stp_)
 
 
-
-test_for_copy2()
+if __name__ == '__main__':
+    test_for_copy2()

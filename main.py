@@ -1,27 +1,34 @@
+import msvcrt
+import os
+
 import Update_Lang
 import Produce_Lang
 
 import Generate_Template
 import Process_json
+import debug
 
 import trivial
 import git_fun
 import crowdin
 
 
-def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", beta=True, mod=False):
+def update_mc_lang(beta=True, mod=False,
+                   target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
+                   json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin"):
     # 找文件位置与版本信息
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
         return
     version, ver = Update_Lang.trans_ver(version_in, beta)
-    print("游戏版本：", ver)
+    print("本机安装版本：", ver)
     info_old = Update_Lang.read_info(beta, target_path, 'object')
     if info_old is None:
-        print('未找到信息文件（object）')
-        return
+        debug.lang_init()
+        print('未找到版本信息文件（object）,已在目录下创建')
+        info_old = Update_Lang.read_info(beta, target_path, 'object')
     ver_old = info_old['ver']
-    print(ver_old)
+    print("信息记录版本：", ver_old)
     compare, major = Update_Lang.compare_ver(ver, ver_old)
 
     if not compare:
@@ -40,7 +47,7 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
         version_type = "Release"
     git_fun.switch(target_path, version_type)
 
-    if not info_old['git']:
+    if compare or not info_old['git']:
         # 复制文件
         Update_Lang.copy(fd_path, target_path, "text")
 
@@ -68,14 +75,13 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
                          path=target_path, path_append="other")
 
     # 判断预发布版情况（Pre-release）
-    if not info_old['crowdin']:
+    if compare or not info_old['crowdin']:
         preview_reset = False
         version_pre = None
         ver_pre = None
         if beta:
             diff_list = git_fun.diff_info(git_fun.diff(), ver)
             print(diff_list)
-            json_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.json"
             info_pre = Update_Lang.read_info(beta, target_path, 'object', pre=True)
             ver_pre = info_pre['ver']
             # print(trivial.only_zh_upd(diff_list) and Update_Lang.compare_ver(ver, ver_pre, complex_return=False))
@@ -97,13 +103,13 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
             if version_pre is not None:
                 input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
                 Process_json.process_en_json(f"{version_pre}_processed.lang", path=target_path, path_append="other",
-                                             json_path=json_path)
+                                             json_path=rf"{json_path}\Pre-Release\processed.json")
                 crowdin.update_branch("Pre-Release", version_pre, reset=False)
                 preview_reset = True
 
         # 更新Crowdin
         Process_json.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
-                                     json_path=rf"D:\Users\Economy\git\Gitee\lang-crowdin\{version_type}\processed.json")
+                                     json_path=rf"{json_path}\{version_type}\processed.json")
         crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
@@ -117,10 +123,32 @@ def update_mc_lang(target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_
     #     Update_Lang.update_info(beta, target_path, ver, 'object')
 
 
-target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
-update_mc_lang(target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang",  # 提取语言文件至该路径
-               # beta=False,  # True:将提取Preview  False:将提取Release
-               mod=True  # 是否修改模板
-               )
+if __name__ == '__main__':
+    main_in = None
+    main_beta = None
+    while True:
+        main_in = input("检测更新的版本（0:Preview 1:Release）：")
+        if main_in == '0':
+            main_beta = True
+            break
+        elif main_in == '1':
+            main_beta = False
+            break
+        else:
+            print('输入有误，请重新输入！')
+    # 提取语言文件位置（git位置）
+    tg_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+    '''
+        可选择fork https://github.com/Jingji132/MCBE-lang后将仓库下载至本地，将以上路径设置为仓库路径
+    '''
+    # json文件位置（用于上传crowdin）
+    js_path = r"D:\Users\Economy\git\Gitee\lang-crowdin"
+
+    update_mc_lang(target_path=tg_path,  # 提取语言文件至该路径
+                   beta=main_beta,  # True:将提取Preview  False:将提取Release
+                   mod=True  # 是否修改模板
+                   )
+
+    a = input("请按任意键退出~")
 
 # Update_Lang.update_info(True, target_path, [1, 20, 10, 24], 'object')

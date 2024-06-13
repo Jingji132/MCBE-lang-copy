@@ -88,7 +88,9 @@ def diff_info(list_new, ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\
         print("diff_info: Not found")
 
 
-print(diff())
+if __name__ == '__main__':
+    print(diff())
+
 # commit(r"D:\Users\Economy\git\Gitee\mcbe-lang-copy", '.', 'Update')
 # target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
 # switch(target_path, 'Release')
