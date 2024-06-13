@@ -7,4 +7,4 @@
 * lang ⇋ json [Process_json.py](Process_json.py)（用于crowdin上传与下载）
 * 生成Java版最新中英语言文件（csv），需要本地安装最新版游戏 [JE_lang.py](JE_lang.py)（用于导入crowdin翻译记忆）
 * git切换分支与提交 [git_fun.py](git_fun.py)（获取版本间的diff文件，在main.py中作为判断版本是否为预发布版的条件，仓库格式为[Jingji132/MCBE-lang](https://github.com/Jingji132/MCBE-lang)</small>）
-* crowdin上传 [crowdin.py](crowdin.py)（需要创建config.json文件）（使用[crowdin-api-client-python](https://github.com/crowdin/crowdin-api-client-python) 1.10.1）
+* crowdin上传 [crowdin.py](crowdin.py)（需要创建config.json文件）（使用[crowdin-api-client-python](https://github.com/crowdin/crowdin-api-client-python) 1.15.2）
