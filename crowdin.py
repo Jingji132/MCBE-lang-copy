@@ -10,7 +10,7 @@ from crowdin_api.api_resources.source_files.types import BranchPatchRequest
 # 读取配置文件
 def init(version_type='Preview'):
     global file_name, file_id, branch_id
-    file_name = fr"D:\Users\Economy\git\Gitee\lang-crowdin1\{version_type}\processed.json"  # lang-crowdin
+    file_name = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{version_type}\processed.json"  # lang-crowdin
     file_dict = get_file()
     branch_id = branch_dict[version_type]
     ver_list = ['Preview', 'Pre-Release', 'Release']
@@ -188,7 +188,7 @@ def download_translate(pre=True):
 
 # download_translate()
 
-with open(r"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config1.json", "r") as config_file:  # config.json
+with open(r"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config.json", "r") as config_file:  # config.json
     config_data = json.load(config_file)
 token = config_data["token"]
 project_id = config_data["project_id"]
