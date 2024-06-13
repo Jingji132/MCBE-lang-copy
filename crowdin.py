@@ -12,6 +12,7 @@ def init(version_type='Preview'):
     global file_name, file_id, branch_id
     file_name = fr"D:\Users\Economy\git\Gitee\lang-crowdin1\{version_type}\processed.json"  # lang-crowdin
     file_dict = get_file()
+    branch_dict = get_branch()
     branch_id = branch_dict[version_type]
     ver_list = ['Preview', 'Pre-Release', 'Release']
     if version_type in ver_list:
@@ -91,6 +92,7 @@ def new_branch(branch_name='new_branch'):
         return None
 
 
+
 def delete_branch(branch_name='new_branch'):
     def del_branch(branch_id_d):
         try:
@@ -99,6 +101,7 @@ def delete_branch(branch_name='new_branch'):
         except crowdin_api.exceptions.APIException as e:
             print(f"删除分支失败: {str(e)}")
 
+    branch_dict = get_branch()
     if branch_name in branch_dict:
         del_branch(branch_dict['new_branch'])
     else:
@@ -197,10 +200,9 @@ client = crowdin_api.CrowdinClient(token=token, project_id=project_id)
 file_id = 0
 branch_id = 0
 file_name = "None"  # r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.json"
-branch_dict = get_branch()
 
 
 if __name__ == '__main__':
     v_name = ['Preview', 'Pre-Release', 'Release']
     v_n = v_name[0]
-    update_branch(v_n, '1.3.0.27', reset=False)
+    update_branch(v_n, '1.21.10.23', reset=False)

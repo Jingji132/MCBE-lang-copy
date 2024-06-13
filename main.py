@@ -1,6 +1,3 @@
-import msvcrt
-import os
-
 import Update_Lang
 import Produce_Lang
 
