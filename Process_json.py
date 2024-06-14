@@ -36,23 +36,39 @@ def processed_to_dict(lang_path, simple=False):
     add_dict = {}
     with open(lang_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
-    for l in lines:
-        if "++ b/text" in l:
+    for line in lines:
+        if "++ b/text" in line:
             continue
         else:
-            l = l.split('\t')
-            if "##" in l[0] or l[0] in ['', ' ', '\n', ' \n']:
+            line = line.split('\t')
+            if "##" in line[0] or line[0] in ['', ' ', '\n', ' \n']:
                 continue
             elif simple:
-                if '#' in l[1]:
+                if '#' in line[1]:
                     print("文件有问题，正文出现注释！")
-                    l[1] = l[1].split('#')[0]
-                add_dict[l[0]] = l[1].replace('\n', '')
+                    line[1] = line[1].split('#')[0]
+                add_dict[line[0]] = line[1].replace('\n', '')
             else:
-                if '#' not in l[2]:
-                    print(l, "：未以#结尾，已自动添加")
-                    l[2] = '#' + l[2]
-                add_dict[l[0]] = [l[1], l[2]]
+                if '#' not in line[2]:
+                    print(line, "：未以#结尾，已自动添加")
+                    line[2] = '#' + line[2]
+                add_dict[line[0]] = [line[1], line[2]]
+    return add_dict
+
+
+def processed_to_dict_new(lang_path):
+    add_dict = {}
+    with open(lang_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    for line in lines:
+        line = line.split('\t')
+        if "##" in line[0] or line[0] in ['', ' ', '\n', ' \n']:
+            continue
+        elif len(line) > 2:
+            add_dict[line[0]] = {"text": line[1], "crowdinContext": line[2]}
+            print(line)
+        else:
+            add_dict[line[0]] = {"text": line[1], "crowdinContext": ''}
     return add_dict
 
 
@@ -68,14 +84,14 @@ def process_zh_json():
 
 
 def process_en_json(process, path=r"D:\Users\Economy\git\Gitee\MCBE-lang", path_append=None,
-                    json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\processed.json"):
+                    json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin1\Preview\processed.json"):
     if path_append is not None:
         path = os.path.join(path, path_append, process)
     else:
         path = os.path.join(path, process)
 
     with open(json_path, 'w+', encoding='utf-8') as f:
-        json.dump(processed_to_dict(path, True), f, ensure_ascii=False)
+        json.dump(processed_to_dict_new(path), f, ensure_ascii=False)
 
 
 def json_to_lang(json_path, lang_path, template):
@@ -136,3 +152,7 @@ def crowdin_to_mclangcn(pre=True):
 # process_en_json("processed.lang", path=path_save, json_path=os.path.join(path_save, 'processed.json'))
 # # ↑↑↑末尾位置的”processed.json“是要保存的json文件名称↑↑↑
 # #
+
+if __name__ == '__main__':
+    # processed_to_dict_new(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang")
+    process_en_json(f"1.21.10.23_processed.lang", path_append="other")
