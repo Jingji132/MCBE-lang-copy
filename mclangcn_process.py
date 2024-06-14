@@ -1,7 +1,7 @@
 # import os
 # import openpyxl
 # import pickle
-import Process_json
+import Convert_Lang
 
 # def lang_to_process(origin, processed="processed.lang",
 #                     path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None,
@@ -157,4 +157,4 @@ import Process_json
 
 # add_mclangcn()
 
-Process_json.crowdin_to_mclangcn()
+Convert_Lang.crowdin_to_mclangcn_csv(False)

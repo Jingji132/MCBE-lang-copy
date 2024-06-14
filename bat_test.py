@@ -2,9 +2,11 @@
 import subprocess
 import os
 
+
 def bet1():
     # cmd = 'cmd.exe c:\\sam.bat'
-    p = subprocess.Popen("cmd.exe /c" + r"D:\Users\Economy\git\Gitee\lang-crowdin\bat_test\1.bat", stdout=subprocess.PIPE,
+    p = subprocess.Popen("cmd.exe /c" + r"D:\Users\Economy\git\Gitee\lang-crowdin\bat_test\1.bat",
+                         stdout=subprocess.PIPE,
                          stderr=subprocess.STDOUT)
 
     curline = p.stdout.readline()
@@ -19,4 +21,11 @@ def bet1():
 def bat2():
     os.system(r"D:\Users\Economy\git\Gitee\lang-crowdin\download.bat")
 
-bat2()
+
+a_dict = {
+    'abc': {
+        '': 'ABC',
+        'hahaha': "HaHaHa"
+    }
+}
+print(a_dict['abc'][''])
