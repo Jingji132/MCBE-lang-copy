@@ -1,3 +1,5 @@
+import os.path
+
 import crowdin_api
 import json
 import requests
@@ -5,13 +7,17 @@ import crowdin_api.exceptions
 from crowdin_api.api_resources.enums import PatchOperation
 from crowdin_api.api_resources.source_files.enums import BranchPatchPath
 from crowdin_api.api_resources.source_files.types import BranchPatchRequest
+from crowdin_api.api_resources.source_strings.enums import SourceStringsPatchPath
+from crowdin_api.api_resources.source_strings.resource import SourceStringsResource
+from crowdin_api.api_resources.source_strings.types import SourceStringsPatchRequest
 
 
 # 读取配置文件
-def init(version_type='Preview'):
+def init(version_type='Preview', csv=True):
     global file_name, file_id, branch_id
-    file_name = fr"D:\Users\Economy\git\Gitee\lang-crowdin1\{version_type}\processed.json"  # lang-crowdin
-    file_dict = get_file()
+    file_name = fr"D:\Users\Economy\git\Gitee\{git_re}\{version_type}\processed.csv"  # lang-crowdin
+    # ------------------------csv-----------------------------
+    file_dict = get_file(csv)
     branch_dict = get_branch()
     branch_id = branch_dict[version_type]
     ver_list = ['Preview', 'Pre-Release', 'Release']
@@ -40,7 +46,8 @@ def add_file():
     # 45/41/11 : Pre-Release/Release/Preview
     storage = client.storages.add_storage(open(file_name, 'rb'))
     # print(file_name)
-    client.source_files.add_file(storage['data']['id'], 'processed.json', branchId=branch_id)
+    client.source_files.add_file(storage['data']['id'], 'processed.csv', branchId=branch_id)
+    # ------------------------csv-----------------------------
     # print(my_file)
     print('添加完成')
 
@@ -64,12 +71,17 @@ def get_branch():
     return branch_dict_
 
 
-def get_file():
+def get_file(csv=True):
+    if csv:
+        fm = 'csv'
+    else:
+        fm = 'json'
     try:
         project_files = client.source_files.list_files()
         file_dict_ = {}
         for f in project_files['data']:
-            if f['data']['name'] == 'processed.json':  # 替换成您的 JSON 文件名
+            if f['data']['name'] == f'processed.{fm}':  # 替换成您的 JSON 文件名
+                # ------------------------csv-----------------------------
                 file_id_ = f['data']['id']
                 file_type_ = f['data']['path'].split('/')[1].split(' (')[0]
                 # print(f"{file_type_}\tFile ID: {file_id_}")
@@ -90,7 +102,6 @@ def new_branch(branch_name='new_branch'):
     except crowdin_api.exceptions.APIException as e:
         print(f"添加分支失败: {str(e)}")
         return None
-
 
 
 def delete_branch(branch_name='new_branch'):
@@ -123,7 +134,7 @@ def rename_branch(branch_id_r, new_branch_name='new_branch_name'):
         print(f"重命名失败: {str(e)}")
 
 
-def update_branch(branch, version, reset=False):
+def update_branch(branch, version=None, reset=False):
     # branch:'Preview'/'Release'/'Pre-Release'
     # 初始化
     init_success = init(branch)
@@ -131,11 +142,12 @@ def update_branch(branch, version, reset=False):
         return
 
     # 查找待更新分支
-    new_name = f"{branch} ({version})"
-    print('将重命名为：', new_name)
+    if version is not None:
+        new_name = f"{branch} ({version})"
+        print('将重命名为：', new_name)
 
-    # 更新分支
-    rename_branch(branch_id, new_name)
+        # 更新分支
+        rename_branch(branch_id, new_name)
     if not reset:
         update_file()
     else:
@@ -150,18 +162,22 @@ def download_translate(pre=True):
         ver = 'Release'
     init(version_type=ver)
     response = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN')
-    file_path = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}\zh-CN\processed.json"
+    client.translations.list_project_builds()
+    file_path = fr"D:\Users\Economy\git\Gitee\{git_re}\{ver}\zh-CN"
+    file_p = fr"{file_path}\processed.csv"
+    # ------------------------csv-----------------------------
     print(response)
     # 下载链接
     download_url = response['data']['url']
-
+    if not os.path.isdir(file_path):
+        os.makedirs(file_path)
     # 发起下载请求
     response = requests.get(download_url)
 
     # 检查响应状态码
     if response.status_code == 200:
         # 保存文件
-        with open(file_path, "wb") as file:
+        with open(file_p, "wb+") as file:
             file.write(response.content)
 
         print("文件已下载并保存")
@@ -191,7 +207,10 @@ def download_translate(pre=True):
 
 # download_translate()
 
-with open(r"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config1.json", "r") as config_file:  # config.json
+t = ''
+config = f"config{t}.json"
+git_re = f'lang-crowdin{t}'
+with open(rf"D:\Users\Economy\git\Gitee\mcbe-lang-copy\{config}", "r") as config_file:  # config.json
     config_data = json.load(config_file)
 token = config_data["token"]
 project_id = config_data["project_id"]
@@ -201,8 +220,27 @@ file_id = 0
 branch_id = 0
 file_name = "None"  # r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.json"
 
+# def test_string():
+# strings = client.source_strings.list_strings(fileId=file_id)
+# for k in strings:
+#     print(k)  # data pagination
+# for i in strings['data']:
+#     print(i)
+# print(i["identifier"])
+# edit_request = SourceStringsPatchRequest(
+#     op=PatchOperation.,
+#     path=SourceStringsPatchPath.TEXT,
+#     value='新的字符串内容'
+# )
+#
+# client.source_strings.edit_string(stringId=319521, data=edit_request)
+
 
 if __name__ == '__main__':
     v_name = ['Preview', 'Pre-Release', 'Release']
-    v_n = v_name[0]
-    update_branch(v_n, '1.21.10.23', reset=False)
+    v_n = v_name[0]  # 0 1 2
+    # init(v_n, False)
+    # test_string()
+    update_branch(v_n, reset=False)
+    # init('Release')
+    # print(client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN'))

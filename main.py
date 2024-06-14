@@ -2,7 +2,7 @@ import Update_Lang
 import Produce_Lang
 
 import Generate_Template
-import Process_json
+import Convert_Lang
 import debug
 
 import trivial
@@ -99,13 +99,13 @@ def update_mc_lang(beta=True, mod=False,
 
             if version_pre is not None:
                 input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
-                Process_json.process_en_json(f"{version_pre}_processed.lang", path=target_path, path_append="other",
+                Convert_Lang.process_en_json(f"{version_pre}_processed.lang", path=target_path, path_append="other",
                                              json_path=rf"{json_path}\Pre-Release\processed.json")
                 crowdin.update_branch("Pre-Release", version_pre, reset=False)
                 preview_reset = True
 
         # 更新Crowdin
-        Process_json.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
+        Convert_Lang.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
                                      json_path=rf"{json_path}\{version_type}\processed.json")
         crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)

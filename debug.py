@@ -2,7 +2,7 @@
 import os.path
 import pickle
 
-import Process_json
+import Convert_Lang
 import Update_Lang
 import crowdin
 
@@ -16,7 +16,7 @@ def pre_release(ver):
     target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
     json_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.json"
 
-    Process_json.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
+    Convert_Lang.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
                                  json_path=json_path)
     crowdin.update_branch("Pre-Release", version, reset=False)
     with open(r"D:\Users\Economy\git\Gitee\MCBE-lang\object\Pre-release", 'wb') as f:
@@ -34,7 +34,7 @@ def change_version(ver, ver_type='Preview'):
     target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
     json_path = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver_type}\processed.json"
 
-    Process_json.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
+    Convert_Lang.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
                                  json_path=json_path)
     crowdin.update_branch(ver_type, version, reset=False)
     with open(rf"D:\Users\Economy\git\Gitee\MCBE-lang\object\{ver_type}", 'wb') as f:
