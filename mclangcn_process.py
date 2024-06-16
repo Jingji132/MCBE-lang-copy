@@ -156,5 +156,5 @@ import Convert_Lang
 #
 
 # add_mclangcn()
-
-Convert_Lang.crowdin_to_mclangcn_csv(False)
+if __name__ == '__main__':
+    Convert_Lang.crowdin_to_mclangcn_csv(True)

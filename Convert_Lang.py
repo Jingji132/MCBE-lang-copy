@@ -173,7 +173,9 @@ def csv_to_lang(csv_path, lang_path, temp_path):
     with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.reader(f)
         for row in reader:
-            lang_dict[row[0]] = row[3]
+            key = row[0].replace('"', '')
+            lang_dict[key] = row[3]
+            print(row[0])
 
     with open(temp_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -186,6 +188,7 @@ def csv_to_lang(csv_path, lang_path, temp_path):
             continue
         elif l_list[0] in lang_dict:
             l_list[1] = lang_dict[l_list[0]]
+            # print(l_list[1])
             if len(l_list) == 2:
                 lzh = l_list[0] + '=' + l_list[1] + '\t#\n'
             elif len(l_list) == 3:
@@ -193,10 +196,11 @@ def csv_to_lang(csv_path, lang_path, temp_path):
             else:
                 print("出错：" + l_list[0])
                 lzh = line
+            print(lzh)
             lang.append(lzh)
         else:
             lang.append(line)
-    with open(lang_path, 'w') as f:
+    with open(lang_path, 'w', encoding='utf-8') as f:
         f.writelines(lang)
 
 
@@ -206,7 +210,7 @@ def crowdin_to_mclangcn_csv(pre=True):
     else:
         ver = ''
     path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\zh-CN\processed.csv"
-    path2 = r"D:\Users\Economy\git\GitHub\mclangcnn\texts\zh_CN.lang"
+    path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
     version_v = version(read_info(beta=pre, path=r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=pre)['ver'])
     print(version_v)
     if not pre:
@@ -214,7 +218,7 @@ def crowdin_to_mclangcn_csv(pre=True):
         version_v = version_l[0]+'.'+version_l[1]+'.'+version_l[2]+' Release'
     path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\other\{version_v}_processed.lang"
 
-    # download_translate(pre)
+    download_translate(pre)
 
     csv_to_lang(path1, path2, path3)
 

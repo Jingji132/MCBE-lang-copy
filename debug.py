@@ -81,18 +81,18 @@ def lang_init(path=r"D:\Users\Economy\git\Gitee\MCBE-lang-test1"):
 
 if __name__ == '__main__':
     lang_init()
-    show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang-test1\object")
+    show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
 # change_version([1, 21, 0, 26])
 # show_object()
 # info={'ver':'', 'git':'', 'crowdin':''}
 # print(isinstance([1,2,3], list))
 
-# Update_Lang.update_info(True,
-#                         r"D:\Users\Economy\git\Gitee\MCBE-lang",
-#                         append='object',
-#                         # pre=True,
-#                         crowdin=False,
-#                         git=False)
-#     show_object()
+    Update_Lang.update_info(False,
+                            r"D:\Users\Economy\git\Gitee\MCBE-lang",
+                            append='object',
+                            # pre=True,
+                            crowdin=False,
+                            git=True)
+    show_object()
 
 # crowdin.update_branch("Release", '1.20.81 release', reset=True)

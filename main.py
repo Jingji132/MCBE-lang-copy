@@ -12,7 +12,7 @@ import crowdin
 
 def update_mc_lang(beta=True, mod=False,
                    target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
-                   json_path=r"D:\Users\Economy\git\Gitee\lang-crowdin"):
+                   csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin"):
     # 找文件位置与版本信息
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
@@ -99,14 +99,16 @@ def update_mc_lang(beta=True, mod=False,
 
             if version_pre is not None:
                 input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
-                Convert_Lang.process_en_json(f"{version_pre}_processed.lang", path=target_path, path_append="other",
-                                             json_path=rf"{json_path}\Pre-Release\processed.json")
+                Convert_Lang.process_csv(rf"{target_path}\other\{version_pre}_processed.lang",
+                                         rf"{csv_path}\Pre-Release\processed.csv",
+                                         True)
                 crowdin.update_branch("Pre-Release", version_pre, reset=False)
                 preview_reset = True
 
         # 更新Crowdin
-        Convert_Lang.process_en_json(f"{version}_processed.lang", path=target_path, path_append="other",
-                                     json_path=rf"{json_path}\{version_type}\processed.json")
+        Convert_Lang.process_csv(rf"{target_path}\other\{version}_processed.lang",
+                                 rf"{csv_path}\{version_type}\processed.csv",
+                                 True)
         crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
@@ -138,8 +140,8 @@ if __name__ == '__main__':
     '''
         可选择fork https://github.com/Jingji132/MCBE-lang后将仓库下载至本地，将以上路径设置为仓库路径
     '''
-    # json文件位置（用于上传crowdin）
-    js_path = r"D:\Users\Economy\git\Gitee\lang-crowdin"
+    # csv文件位置（用于上传crowdin）
+    csv_path = r"D:\Users\Economy\git\Gitee\lang-crowdin"
 
     update_mc_lang(target_path=tg_path,  # 提取语言文件至该路径
                    beta=main_beta,  # True:将提取Preview  False:将提取Release
