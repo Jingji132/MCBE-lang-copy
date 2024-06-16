@@ -175,8 +175,7 @@ def csv_to_lang(csv_path, lang_path, temp_path):
         for row in reader:
             key = row[0].replace('"', '')
             lang_dict[key] = row[3]
-            print(row[0])
-
+            # print(row[0])
     with open(temp_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
 
@@ -196,7 +195,7 @@ def csv_to_lang(csv_path, lang_path, temp_path):
             else:
                 print("出错：" + l_list[0])
                 lzh = line
-            print(lzh)
+            # print(lzh)
             lang.append(lzh)
         else:
             lang.append(line)
