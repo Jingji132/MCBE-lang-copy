@@ -1,85 +1,79 @@
 import os
 
-
-def read(sub_folder="vanilla",
-         display=0,
-         folder=0,
-         path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
-         pack_name="Minecraft译名修正"):
-    if folder == 0:
-        folder = "text"
-    lang_path = os.path.join(path, folder, sub_folder, "en_US.lang")
-    if not os.path.exists(lang_path):
-        print("未找到当前模板中的", folder, "/", sub_folder, "，已跳过相关操作")
-        return False
-    with open(lang_path, "r", encoding='utf-8') as f:
-        line = f.readlines()
-        f.close()
-    if sub_folder == "vanilla":
-        line[1] = f"## {pack_name}\n"  # Minecraft译名修正
-    else:
-        if display == 0:
-            display = sub_folder.replace("_", " ").title()
-        line.insert(0, f"\n## {display} strings\n")
-    line.append("\n")
-    return line
+import base_fun
 
 
 def save(template=None,
-         path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None,
-         file_name="test.lang"):
-    if path_append is not None:
-        save_path = os.path.join(path, path_append)
-    else:
-        save_path = path
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+         read_dir_path=r"...\MCBE-lang",
+         save_path=r"...\MCBE-lang\other\test.lang",
+         zh=False):
+    def read(sub_folder="vanilla",
+             display=0,
+             folder=0,
+             path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
+             pack_name="Minecraft译名修正",
+             is_zh=False):
+        if folder == 0:
+            folder = "text"
+        if is_zh:
+            lang_type = 'zh_CN.lang'
+            lang_path = os.path.join(path, folder, sub_folder, lang_type)
+        else:
+            lang_type = 'en_US.lang'
+            lang_path = os.path.join(path, folder, sub_folder, lang_type)
+
+        # print(lang_path)
+        if not os.path.exists(lang_path):
+            print("未找到当前模板中的", folder, "/", sub_folder, lang_type, "，已跳过相关操作")
+            return False
+        with open(lang_path, "r", encoding='utf-8') as f:
+            line = f.readlines()
+            f.close()
+        if sub_folder == "vanilla":
+            line[1] = f"## {pack_name}\n"  # Minecraft译名修正
+        else:
+            if display == 0:
+                display = sub_folder.replace("_", " ").title()
+            line.insert(0, f"\n## {display} strings\n")
+        line.append("\n")
+        return line
+
     if template is None:
         template = [[["vanilla", 0, 0]]]
-    file_path = os.path.join(save_path, file_name)
-    with open(file_path, "w", encoding='utf-8') as f:
+
+    base_fun.make_dir_path(save_path)
+    with open(save_path, "w", encoding='utf-8') as f:
         for ii in template:
             for i in ii:
                 lang_line = read(sub_folder=i[0], display=i[1], folder=i[2],
-                                 path=path)
+                                 path=read_dir_path, is_zh=zh)
                 if lang_line:
                     f.writelines(lang_line)
-        f.close()
 
 
-def process(origin, processed="processed.lang",
-            onlykey="onlykey.lang",
-            path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None,
-            origin_path=None):
-    if path_append is not None:
-        path = os.path.join(path, path_append)
-    if origin_path is None:
-        origin_path = path
-    if not os.path.exists(path):
-        os.makedirs(path)
-    origin_path = os.path.join(origin_path, origin)
-    process_path = os.path.join(path, processed)
-    onlykey_path = os.path.join(path, onlykey)
-    processed_line = []
-    onlykey_line = []
+def process(origin_path, processed_path):
+
     with open(origin_path, "r", encoding='utf-8') as f:
         line = f.readlines()
-        f.close()
+
+    processed_line = []
     for i in line:
         if "=" in i:
-            i = i.replace("\t", "").replace("#", "[TAB]#", 1).replace("=", "[TAB]", 1).replace("[TAB]", "\t")
+            i = base_fun.replace_rule(i)
             processed_line.append(i)
-            onlykey_line.append(i.split('\t')[0])
         else:
             i = i.replace("\t", " ")
             processed_line.append(i)
-            onlykey_line.append(i)
-    with open(process_path, "w", encoding='utf-8') as f:
+
+    with open(processed_path, "w", encoding='utf-8') as f:
         f.writelines(processed_line)
-        f.close()
-    with open(onlykey_path, "w", encoding='utf-8') as f:
-        f.writelines(onlykey_line)
-        f.close()
+
 
 # save_lang(temp, path_append="text", file_name="test_origin.lang")
 # process_lang("test_origin.lang", path_append="text")
+
+if __name__ == '__main__':
+    save(None,
+         r"D:\Users\Economy\git\Gitee\MCBE-lang",
+         r"D:\Users\Economy\git\Gitee\MCBE-lang\test\test_zh.lang",
+         zh=True)

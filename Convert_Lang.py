@@ -1,36 +1,12 @@
 import csv
 import json
 import os
+import shutil
 
+import Produce_Lang
+import base_fun
 from Update_Lang import read_info, version
 from crowdin import download_translate
-
-
-def lang_to_process(origin, processed="processed.lang",
-                    path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None,
-                    origin_path=None):
-    if path_append is not None:
-        path = os.path.join(path, path_append)
-    if origin_path is None:
-        origin_path = path
-    if not os.path.exists(path):
-        os.makedirs(path)
-    origin_path = os.path.join(origin_path, origin)
-    process_path = os.path.join(path, processed)
-    processed_line = []
-    with open(origin_path, "r", encoding='utf-8') as f:
-        line = f.readlines()
-        f.close()
-    for i in line:
-        if "=" in i:
-            i = i.replace("\t", "").replace("#", "[TAB]#", 1).replace("=", "[TAB]", 1).replace("[TAB]", "\t")
-            processed_line.append(i)
-        else:
-            i = i.replace('\t', ' ')
-            processed_line.append(i)
-    with open(process_path, "w", encoding='utf-8') as f:
-        f.writelines(processed_line)
-        f.close()
 
 
 def processed_to_dict(lang_path):
@@ -67,7 +43,7 @@ def processed_to_dict_new(lang_path):
 def convert_zh_lang(is_json=False, is_csv=False):
     source_path = r"D:\Users\Economy\git\GitHub\mclangcn\texts"
     process_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\mclangcn"
-    lang_to_process('zh_CN.lang', origin_path=source_path, path=process_path)
+    Produce_Lang.process(origin_path=rf"{source_path}\zh_CN.lang", path=process_path)
 
     path4 = os.path.join(process_path, 'processed.lang')
 
@@ -102,6 +78,19 @@ def process_en_json(process, path=r"D:\Users\Economy\git\Gitee\MCBE-lang", path_
         json.dump(processed_to_dict_new(path), f, ensure_ascii=False)
 
 
+def lang_to_dict(lang_path):
+    with open(lang_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+    lang_dict = {}
+    for line in lines:
+        if "=" in line:
+            new_line = base_fun.replace_rule(line).split('\t')
+            lang_dict[new_line[0]] = new_line[1]
+        else:
+            continue
+    return lang_dict
+
+
 def process_csv(input_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0 release_processed.lang",
                 output_path=r"D:\Users\Economy\git\Gitee\lang-crowdin1\Preview\processed.csv",
                 special_key=True):
@@ -122,6 +111,25 @@ def process_csv(input_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0 r
         writer = csv.writer(f)
         writer.writerow(headers)
         writer.writerows(rows)
+
+
+def csv_add_context(add_dict, csv_path, text=''):
+    temp_file = csv_path + '.tmp'  # 临时文件名
+    with (open(csv_path, 'r', encoding='utf-8') as f,
+          open(temp_file, 'w', newline='', encoding='utf-8') as temp):
+        reader = csv.reader(f)
+        writer = csv.writer(temp)
+        for row in reader:
+            key = row[0].replace('"', '')
+            if row and key in add_dict:
+                new_row = row[:]
+                new_row[2] = row[2] + '\n' + text + add_dict[key]
+                writer.writerow(new_row)
+            else:
+                writer.writerow(row)
+    # 将临时文件复制到原始文件
+    shutil.move(temp_file, csv_path)
+    # os.remove(temp_file)  # 删除临时文件
 
 
 def json_to_lang(json_path, lang_path, template):
@@ -237,7 +245,7 @@ def crowdin_to_mclangcn_csv(pre=True):
 # # ↑↑↑末尾位置的”processed.json“是要保存的json文件名称↑↑↑
 # #
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     # processed_to_dict_new(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang")
     # process_en_json(f"1.21.0 release_processed.lang", path=r"D:\Users\Economy\git\Gitee\MCBE-lang",
     #                 path_append="other",
@@ -248,7 +256,7 @@ if __name__ == '__main__':
     # crowdin_to_mclangcn_csv(False)
     # convert_zh_lang(True, True)
 
-    v_name = ['Preview', 'Pre-Release', 'Release']
-    v_n = v_name[0]  # 0 1 2
-    process_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang",
-                rf"D:\Users\Economy\git\Gitee\lang-crowdin\{v_n}\processed.csv")
+    # v_name = ['Preview', 'Pre-Release', 'Release']
+    # v_n = v_name[0]  # 0 1 2
+    # process_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang",
+    #             rf"D:\Users\Economy\git\Gitee\lang-crowdin\{v_n}\processed.csv")

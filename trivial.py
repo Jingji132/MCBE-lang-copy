@@ -3,6 +3,9 @@ from random import randint
 import requests
 import difflib
 
+import Convert_Lang
+import Produce_Lang
+
 
 def find_in_dict(the_dict, key, full=True):
     if key in the_dict:
@@ -110,7 +113,8 @@ def only_zh_upd(diff_list):
 
 # get_url('https://google.com', 5)
 def test_for_copy2():
-    paths = os.walk(r"C:\Program Files\WindowsApps\Microsoft.MinecraftWindowsBeta_1.20.5022.0_x64__8wekyb3d8bbwe\data\resource_packs")
+    paths = os.walk(
+        r"C:\Program Files\WindowsApps\Microsoft.MinecraftWindowsBeta_1.20.5022.0_x64__8wekyb3d8bbwe\data\resource_packs")
     print('\n')
     path_list = []
     for path, dir_lst, file_lst in paths:
@@ -120,8 +124,18 @@ def test_for_copy2():
     for path in path_list:
         short_path = path.split(r"x64__8wekyb3d8bbwe\data\resource_packs")[1]
         stp = short_path.replace("\\", '', 1).replace(r'\texts', '', 1)
-        stp_ = stp.replace('\\','_')
+        stp_ = stp.replace('\\', '_')
         print(stp_)
+
+
+def add_bad_translation(template=None,
+                        target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang",
+                        zh_merged_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\test\zh_BAD.lang",
+                        csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv"):
+
+    Produce_Lang.save(template, target_path, zh_merged_path, zh=True)
+    zh_dict = Convert_Lang.lang_to_dict(zh_merged_path)
+    Convert_Lang.csv_add_context(zh_dict, csv_path, '基翻：')
 
 
 if __name__ == '__main__':

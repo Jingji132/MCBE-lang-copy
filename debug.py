@@ -1,8 +1,10 @@
 # 更新Crowdin
+import csv
 import os.path
 import pickle
 
 import Convert_Lang
+import Produce_Lang
 import Update_Lang
 import crowdin
 
@@ -82,17 +84,17 @@ def lang_init(path=r"D:\Users\Economy\git\Gitee\MCBE-lang-test1"):
 if __name__ == '__main__':
     lang_init()
     show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
-# change_version([1, 21, 0, 26])
-# show_object()
-# info={'ver':'', 'git':'', 'crowdin':''}
-# print(isinstance([1,2,3], list))
 
-    Update_Lang.update_info(False,
-                            r"D:\Users\Economy\git\Gitee\MCBE-lang",
-                            append='object',
-                            # pre=True,
-                            crowdin=False,
-                            git=True)
-    show_object()
+    Update_Lang.update_info(beta=True, path=r'D:\Users\Economy\git\Gitee\MCBE-lang\object',
+                            crowdin=False)
 
-# crowdin.update_branch("Release", '1.20.81 release', reset=True)
+    show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
+
+    # csv_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv"
+    # with open(csv_path, 'r', encoding='utf-8') as f:
+    #     reader = csv.DictReader(f)
+    #     new_rows = []
+    #     for row in reader:
+    #         if row[int('Key')] in ["tips.game.3"]:
+    #             print(row[int('Key')])
+
