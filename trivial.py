@@ -4,7 +4,9 @@ import requests
 import difflib
 
 import Convert_Lang
+import Generate_Template
 import Produce_Lang
+import crowdin
 
 
 def find_in_dict(the_dict, key, full=True):
@@ -139,4 +141,10 @@ def add_bad_translation(template=None,
 
 
 if __name__ == '__main__':
-    test_for_copy2()
+    # target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+    # template = Generate_Template.read(target_path)
+    # add_bad_translation(template, target_path,
+    #                     r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0.26_zh_BAD.lang",
+    #                     r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.csv")
+
+    crowdin.update_branch('Pre-Release')

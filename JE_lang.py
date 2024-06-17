@@ -85,7 +85,7 @@ def translate_memory(en, zh, _path, name):
 
 
 def translate_memory2(en, zh, _path, name):
-    headers = ['en', 'zh-CN']
+    headers = ['en-US', 'zh-CN']
     rows = []
     for key in zh:
         rows.append((en[key], zh[key]))
@@ -96,8 +96,9 @@ def translate_memory2(en, zh, _path, name):
         writer.writerows(rows)
 
 
-en_us, zh_cn = find_je_lang()
-path = r"D:\Users\Economy\git\Gitee\MCJE-lang"
-# create_lang(en_us, path, 'en_US.lang')
-# create_lang(zh_cn, path, 'zh_CN.lang')
-translate_memory2(en_us, zh_cn, path, 'output.csv')
+if __name__ == '__main__':
+    en_us, zh_cn = find_je_lang()
+    path = r"D:\Users\Economy\git\Gitee\MCJE-lang"
+    # create_lang(en_us, path, 'en_US.lang')
+    # create_lang(zh_cn, path, 'zh_CN.lang')
+    translate_memory2(en_us, zh_cn, path, 'output.csv')
