@@ -119,7 +119,7 @@ def update_mc_lang(beta=True, mod=False,
         trivial.add_bad_translation(template, target_path,
                                     rf"{target_path}\other\{version}_zh_BAD.lang",
                                     processed_path)
-        crowdin.update_branch(version_type, version, reset=preview_reset)
+        # crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
