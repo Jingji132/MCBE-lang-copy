@@ -50,37 +50,37 @@ def copy(origin_path,
                 shutil.copy(zh_lang, subfolder_path)
 
 
-def copy2(origin_path,
-          target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
-          target_folder="text"):
-    target_folder_path = os.path.join(target_path, target_folder)
-    paths = os.walk(origin_path)
-    path_list = []
-    for path, dir_lst, file_lst in paths:
-        for dir_name in dir_lst:
-            if dir_name == 'texts':
-                path_list.append(os.path.join(path, dir_name))
-    if os.path.isdir(target_folder_path):
-        shutil.rmtree(target_folder_path)
-    else:
-        os.makedirs(target_folder_path)
-    for texts_path in path_list:
-        en_lang = os.path.join(texts_path, "en_US.lang")
-        zh_lang = os.path.join(texts_path, "zh_CN.lang")
-        en_exist = os.path.isfile(en_lang)
-        zh_exist = os.path.isfile(zh_lang)
-        if not (en_exist or zh_exist):
-            continue
-        else:
-            short_path = texts_path.split(r"x64__8wekyb3d8bbwe\data\resource_packs")[1]
-            stp = short_path.replace("\\", '', 1).replace(r'\texts', '', 1)
-            stp_ = stp.replace('\\', '_')
-            subfolder_path = os.path.join(target_folder_path, stp_)
-            os.makedirs(subfolder_path)
-            if en_exist:
-                shutil.copy(en_lang, subfolder_path)
-            if zh_exist:
-                shutil.copy(zh_lang, subfolder_path)
+# def copy2(origin_path,
+#           target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
+#           target_folder="text"):
+#     target_folder_path = os.path.join(target_path, target_folder)
+#     paths = os.walk(origin_path)
+#     path_list = []
+#     for path, dir_lst, file_lst in paths:
+#         for dir_name in dir_lst:
+#             if dir_name == 'texts':
+#                 path_list.append(os.path.join(path, dir_name))
+#     if os.path.isdir(target_folder_path):
+#         shutil.rmtree(target_folder_path)
+#     else:
+#         os.makedirs(target_folder_path)
+#     for texts_path in path_list:
+#         en_lang = os.path.join(texts_path, "en_US.lang")
+#         zh_lang = os.path.join(texts_path, "zh_CN.lang")
+#         en_exist = os.path.isfile(en_lang)
+#         zh_exist = os.path.isfile(zh_lang)
+#         if not (en_exist or zh_exist):
+#             continue
+#         else:
+#             short_path = texts_path.split(r"x64__8wekyb3d8bbwe\data\resource_packs")[1]
+#             stp = short_path.replace("\\", '', 1).replace(r'\texts', '', 1)
+#             stp_ = stp.replace('\\', '_')
+#             subfolder_path = os.path.join(target_folder_path, stp_)
+#             os.makedirs(subfolder_path)
+#             if en_exist:
+#                 shutil.copy(en_lang, subfolder_path)
+#             if zh_exist:
+#                 shutil.copy(zh_lang, subfolder_path)
 
 
 def trans_ver(version_internal, beta=True):
@@ -134,30 +134,6 @@ def read_info(beta, path, append=None, pre=False):
     else:
         info = None
     return info
-
-
-def compare_ver(ver1, ver2, complex_return=True):
-    flag1 = False  # 判断ver1是否大于ver2
-    for i in range(4):
-        if ver1[i] > ver2[i]:
-            flag1 = True
-            break
-
-        elif ver1[i] < ver2[i]:
-            flag1 = False
-            break
-
-        else:
-            i += 1
-            continue
-    if i < 3:
-        flag2 = True
-    else:
-        flag2 = False
-    if complex_return:
-        return flag1, flag2
-    else:
-        return flag1
 
 
 def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=None):

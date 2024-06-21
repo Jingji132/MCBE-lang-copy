@@ -1,5 +1,6 @@
 import os
 
+import Generate_Template
 import base_fun
 
 
@@ -7,14 +8,12 @@ def save(template=None,
          read_dir_path=r"...\MCBE-lang",
          save_path=r"...\MCBE-lang\other\test.lang",
          zh=False):
-    def read(sub_folder="vanilla",
-             display=0,
-             folder=0,
+    def read(folder='text',
+             sub_folder="vanilla",
+             display='',
              path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
              pack_name="Minecraft译名修正",
              is_zh=False):
-        if folder == 0:
-            folder = "text"
         if is_zh:
             lang_type = 'zh_CN.lang'
             lang_path = os.path.join(path, folder, sub_folder, lang_type)
@@ -32,27 +31,27 @@ def save(template=None,
         if sub_folder == "vanilla":
             line[1] = f"## {pack_name}\n"  # Minecraft译名修正
         else:
-            if display == 0:
+            if display == '':
                 display = sub_folder.replace("_", " ").title()
             line.insert(0, f"\n## {display} strings\n")
         line.append("\n")
         return line
 
     if template is None:
-        template = [[["vanilla", 0, 0]]]
+        template = Generate_Template.old_to_new([[["vanilla", 0, 0]]])
 
     base_fun.make_dir_path(save_path)
     with open(save_path, "w", encoding='utf-8') as f:
-        for ii in template:
-            for i in ii:
-                lang_line = read(sub_folder=i[0], display=i[1], folder=i[2],
+        for _i in template:
+            for _ii in template[_i]:
+                context = template[_i][_ii]
+                lang_line = read(folder=_i, sub_folder=_ii, display=context['display'],
                                  path=read_dir_path, is_zh=zh)
                 if lang_line:
                     f.writelines(lang_line)
 
 
 def process(origin_path, processed_path):
-
     with open(origin_path, "r", encoding='utf-8') as f:
         line = f.readlines()
 

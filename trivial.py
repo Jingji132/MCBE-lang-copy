@@ -134,7 +134,6 @@ def add_bad_translation(template=None,
                         target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang",
                         zh_merged_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\test\zh_BAD.lang",
                         csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv"):
-
     Produce_Lang.save(template, target_path, zh_merged_path, zh=True)
     zh_dict = Convert_Lang.lang_to_dict(zh_merged_path)
     Convert_Lang.csv_add_context(zh_dict, csv_path, '基翻：')
@@ -147,4 +146,7 @@ if __name__ == '__main__':
     #                     r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0.26_zh_BAD.lang",
     #                     r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.csv")
 
-    crowdin.update_branch('Pre-Release')
+    # crowdin.update_branch('Pre-Release')
+
+    if False:
+        print(1)

@@ -3,6 +3,7 @@ import Produce_Lang
 
 import Generate_Template
 import Convert_Lang
+import base_fun
 import debug
 
 import trivial
@@ -10,9 +11,9 @@ import git_fun
 import crowdin
 
 
-def update_mc_lang(beta=True, mod=False,
-                   target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
-                   csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin"):
+def update_mc_lang(beta=True,
+                   target_path=r"...\MCBE-lang_UPD_test",
+                   crowdin_path=r"...\lang-crowdin"):
     # 找文件位置与版本信息
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
@@ -26,7 +27,7 @@ def update_mc_lang(beta=True, mod=False,
         info_old = Update_Lang.read_info(beta, target_path, 'object')
     ver_old = info_old['ver']
     print("信息记录版本：", ver_old)
-    compare, major = Update_Lang.compare_ver(ver, ver_old)
+    compare, major = base_fun.compare_ver(ver, ver_old, complex_return=True)
 
     if not compare:
         if ver == ver_old and (not info_old['git'] or not info_old['crowdin']):
@@ -59,11 +60,13 @@ def update_mc_lang(beta=True, mod=False,
     # 更新tips序号（目前无需此操作）
     # trivial.update_custom_tips(target_path)
 
-    # 修改模板（排序、名称等）
-    template = Generate_Template.update(target_path, path_append_list=["other"])
-    if mod:
-        Generate_Template.modify(target_path)
-        template = Generate_Template.read(target_path)
+    # 更新模板
+    template = Generate_Template.update_json(beta, target_path)
+
+    # 修改模板（已弃用），模板已改为json格式，可手动修改
+    # if mod:
+    #     Generate_Template.modify(target_path)
+    #     template = Generate_Template.read(target_path)
 
     # 生成处理文件
     merged_file = f"{version}_merged.lang"
@@ -101,7 +104,7 @@ def update_mc_lang(beta=True, mod=False,
 
             if version_pre is not None:
                 input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
-                processed_path = rf"{csv_path}\Pre-Release\processed.csv"
+                processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
                 Convert_Lang.process_csv(input_path=rf"{target_path}\other\{version_pre}_processed.lang",
                                          output_path=processed_path,
                                          special_key=True)
@@ -112,14 +115,14 @@ def update_mc_lang(beta=True, mod=False,
                 preview_reset = True
 
         # 更新Crowdin
-        processed_path = rf"{csv_path}\{version_type}\processed.csv"
+        processed_path = rf"{crowdin_path}\{version_type}\processed.csv"
         Convert_Lang.process_csv(input_path=rf"{target_path}\other\{version}_processed.lang",
                                  output_path=processed_path,
                                  special_key=True)
         trivial.add_bad_translation(template, target_path,
                                     rf"{target_path}\other\{version}_zh_BAD.lang",
                                     processed_path)
-        # crowdin.update_branch(version_type, version, reset=preview_reset)
+        crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
@@ -155,7 +158,7 @@ if __name__ == '__main__':
 
     update_mc_lang(target_path=tg_path,  # 提取语言文件至该路径
                    beta=main_beta,  # True:将提取Preview  False:将提取Release
-                   mod=True  # 是否修改模板
+                   # mod=True  # 是否修改模板
                    )
 
     a = input("请按任意键退出~")
