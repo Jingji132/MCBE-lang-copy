@@ -1,6 +1,9 @@
+import json
 import os
 import shutil
 import pickle
+
+import base_fun
 
 
 def find(beta=True):
@@ -117,56 +120,51 @@ def readme(version_read, target_path):
         f.close()
 
 
-def read_info(beta, path, append=None, pre=False):
+def init_info(path):
+    info = {"git": False, "crowdin": False, "ver": [0, 0, 0, 0]}
+    ver_info = {'Preview': info, 'Release': info, 'Pre-release': info}
+    with open(path, 'w+', encoding='utf-8') as f:
+        json.dump(ver_info, f, indent=4)
+    return ver_info
+
+
+def read_info_full(path, append=None, filename='Version_info.json'):
     if append is not None:
         path = os.path.join(path, append)
-    if beta and not pre:
-        name = 'Preview'
-    elif beta and pre:
-        name = 'Pre-release'
-    else:
-        name = 'Release'
-    path = os.path.join(path, name)
+    path = os.path.join(path, filename)
+
     if os.path.isfile(path):
-        with open(path, 'rb+') as f:
-            info = pickle.load(f)
-            f.close()
+        with open(path, 'r', encoding='utf-8') as f:
+            info = json.load(f)
     else:
-        info = None
+        base_fun.make_dir_path(path)
+        info = init_info(path)
     return info
 
 
-def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=None):
+def read_info(beta, path, append=None, pre=False, filename='Version_info.json'):
+    name = base_fun.ver_str(beta, pre)
+    info = read_info_full(path, append, filename)
+    return info[name]
+
+
+def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=None, filename='Version_info.json'):
     # print(beta, pre)
+    info = read_info_full(path, append, filename)
+    name = base_fun.ver_str(beta, pre)
+
+    if isinstance(git, bool):
+        info[name]['git'] = git
+    if isinstance(crowdin, bool):
+        info[name]['crowdin'] = crowdin
+    if isinstance(ver, list):
+        info[name]['ver'] = ver
+
     if append is not None:
         path = os.path.join(path, append)
-    if beta and pre:
-        name = 'Pre-release'
-    elif beta and not pre:
-        name = 'Preview'
-    else:
-        name = 'Release'
-    path2 = os.path.join(path, name)
-    # print(name)
-    try:
-        with open(path2, 'rb+') as f:
-            info = pickle.load(f)
-            f.close()
-    except FileNotFoundError:
-        info = {'git': False, 'crowdin': False, 'ver': [0, 0, 0, 0]}
-        if not os.path.isdir(path):
-            os.makedirs(path)
-    if isinstance(git, bool):
-        info['git'] = git
-    if isinstance(crowdin, bool):
-        info['crowdin'] = crowdin
-    if isinstance(ver, list):
-        info['ver'] = ver
-
-    with open(path2, 'wb') as f:
-        pickle.dump(info, f)
-        f.close()
-
+    path = os.path.join(path, filename)
+    with open(path, 'w+', encoding='utf-8') as f:
+        json.dump(info, f, indent=4)
 
 
 def update_lang(beta=True,
@@ -180,8 +178,13 @@ def update_lang(beta=True,
     readme(version, target_path)
 
 
-# update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 20, 20], 'object', pre=False)
-# update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
-# print(read_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object', pre=False))
-# target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
-# print(read_info(True, target_path, 'object', pre=True))
+if __name__ == '__main__':
+    # ri = read_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object')
+    # ri = read_info_full(r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object')
+    # print(ri)
+    # update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object', [1, 20, 20, 20], pre=False)
+    # update_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", [1, 20, 0, 25], 'object', pre=True)
+    # print(read_info(True, r"D:\Users\Economy\git\Gitee\MCBE-lang", 'object', pre=False))
+    # target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+    # print(read_info(True, target_path, 'object', pre=True))
+    pass

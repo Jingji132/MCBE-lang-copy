@@ -1,5 +1,6 @@
 # 更新Crowdin
 import csv
+import json
 import os.path
 import pickle
 
@@ -81,14 +82,30 @@ def lang_init(path=r"D:\Users\Economy\git\Gitee\MCBE-lang-test1"):
     return
 
 
+target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+
+
+def info_o2n():
+    P = Update_Lang.read_info(True, target_path, 'object')
+    R = Update_Lang.read_info(False, target_path, 'object')
+    PR = Update_Lang.read_info(True, target_path, 'object', pre=True)
+
+    new={'Preview':P, 'Release':R, 'Pre-release':PR}
+    print(new)
+
+    with open(rf'{target_path}/object/Version_info.json', 'w+', encoding='utf-8') as f:
+        json.dump(new, f, indent=4)
+
+
 if __name__ == '__main__':
-    lang_init()
-    show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
-
-    Update_Lang.update_info(beta=True, path=r'D:\Users\Economy\git\Gitee\MCBE-lang\object',
-                            crowdin=False)
-
-    show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
+    info_o2n()
+    # lang_init()
+    # show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
+    #
+    # Update_Lang.update_info(beta=True, path=r'D:\Users\Economy\git\Gitee\MCBE-lang\object',
+    #                         crowdin=False)
+    #
+    # show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
 
     # csv_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv"
     # with open(csv_path, 'r', encoding='utf-8') as f:
@@ -97,4 +114,3 @@ if __name__ == '__main__':
     #     for row in reader:
     #         if row[int('Key')] in ["tips.game.3"]:
     #             print(row[int('Key')])
-

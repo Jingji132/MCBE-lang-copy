@@ -58,3 +58,13 @@ def compare_ver(ver1, ver2, complex_return=False):
         return flag1, flag2
     else:
         return flag1
+
+
+def ver_str(beta, pre=False):
+    if beta:
+        if pre:
+            return 'Pre-release'
+        else:
+            return 'Preview'
+    else:
+        return 'Release'
