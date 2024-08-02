@@ -70,11 +70,11 @@ def update_mc_lang(beta=True,
 
     # 生成处理文件
     merged_file = f"{version}_merged.lang"
-    Produce_Lang.save(template, target_path, fr"{target_path}/other/{merged_file}")
+    Produce_Lang.save(template, target_path, fr"{target_path}/process file/{merged_file}")
 
     processed_file = f"{version}_processed.lang"
-    Produce_Lang.process(fr"{target_path}/other/{merged_file}",
-                         fr"{target_path}/other/{processed_file}")
+    Produce_Lang.process(fr"{target_path}/process file/{merged_file}",
+                         fr"{target_path}/process file/{processed_file}")
 
     # 判断预发布版情况（Pre-release）
     if compare or not info_old['crowdin']:
@@ -105,22 +105,22 @@ def update_mc_lang(beta=True,
             if version_pre is not None:
                 input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
                 processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
-                Convert_Lang.process_csv(input_path=rf"{target_path}\other\{version_pre}_processed.lang",
+                Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version_pre}_processed.lang",
                                          output_path=processed_path,
                                          special_key=True)
                 trivial.add_bad_translation(template, target_path,
-                                            rf"{target_path}\other\{version_pre}_zh_BAD.lang",
+                                            rf"{target_path}\process file\{version_pre}_zh_BAD.lang",
                                             processed_path)
                 crowdin.update_branch("Pre-Release", version_pre, reset=False)
                 preview_reset = True
 
         # 更新Crowdin
         processed_path = rf"{crowdin_path}\{version_type}\processed.csv"
-        Convert_Lang.process_csv(input_path=rf"{target_path}\other\{version}_processed.lang",
+        Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version}_processed.lang",
                                  output_path=processed_path,
                                  special_key=True)
         trivial.add_bad_translation(template, target_path,
-                                    rf"{target_path}\other\{version}_zh_BAD.lang",
+                                    rf"{target_path}\process file\{version}_zh_BAD.lang",
                                     processed_path)
         crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
@@ -158,6 +158,7 @@ if __name__ == '__main__':
 
     update_mc_lang(target_path=tg_path,  # 提取语言文件至该路径
                    beta=main_beta,  # True:将提取Preview  False:将提取Release
+                   crowdin_path=csv_path
                    # mod=True  # 是否修改模板
                    )
 

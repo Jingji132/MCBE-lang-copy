@@ -4,6 +4,7 @@ import pickle
 from git import Repo
 
 import Update_Lang
+import base_fun
 
 
 def switch(repo_path, new_branch):
@@ -76,7 +77,7 @@ def diff_info(list_new, ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\
             f.close()
         if 'ver' in info:
             ver_old = info['ver']
-            if Update_Lang.compare_ver(ver, ver_old, complex_return=False):
+            if base_fun.compare_ver(ver, ver_old, complex_return=False):
                 info = {'ver': ver, 'list': list_new}
                 with open(path, 'wb') as f:
                     pickle.dump(info, f)

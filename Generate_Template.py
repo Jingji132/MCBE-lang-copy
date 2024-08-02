@@ -203,7 +203,7 @@ def update_json(beta, path=r"...\MCBE-lang_UPD_test", deny_list=None):
 
     template = read_json(rf"{path}\object\template.json")
     if deny_list is None:
-        deny_list = ["education", "education_demo", "previewapp", "vanilla_base", "vanilla_vr"]
+        deny_list = ["education", "education_demo", "previewapp", "vanilla_base", "vanilla_vr", "beta", "platform_google", "platform_ios", "platform_xbox"]
 
     beta_str = base_fun.beta_str(beta)
 

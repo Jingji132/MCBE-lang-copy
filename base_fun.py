@@ -37,7 +37,7 @@ def beta_str(beta, up=False):
 def compare_ver(ver1, ver2, complex_return=False):
     flag1 = False  # 判断ver1是否大于ver2
     i = 0
-    for i in ver1:
+    for i in range(4):
         if ver1[i] == ver2[i]:
             i += 1
             continue
