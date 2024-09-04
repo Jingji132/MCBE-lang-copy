@@ -223,7 +223,7 @@ def crowdin_to_mclangcn_csv(pre=True):
     if not pre:
         version_l = version_v.split('.')
         version_v = version_l[0]+'.'+version_l[1]+'.'+version_l[2]+' Release'
-    path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\other\{version_v}_processed.lang"
+    path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\process file\{version_v}_processed.lang"
 
     download_translate(pre)
 
