@@ -211,21 +211,18 @@ def csv_to_lang(csv_path, lang_path, temp_path):
         f.writelines(lang)
 
 
-def crowdin_to_mclangcn_csv(pre=True):
+def crowdin_to_mclangcn_csv(pre=True, lang_type='zh_CN'):
     if pre:
         ver = 'Pre-'
     else:
         ver = ''
-    path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\zh-CN\processed.csv"
-    path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
+    path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\download\{lang_type}.csv"
+    path2 = fr"D:\Users\Economy\git\GitHub\mclangcn\texts\{lang_type}.lang"
     version_v = version(read_info(beta=pre, path=r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=pre)['ver'])
-    print(version_v)
     if not pre:
         version_l = version_v.split('.')
         version_v = version_l[0]+'.'+version_l[1]+'.'+version_l[2]+' Release'
     path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\process file\{version_v}_processed.lang"
-
-    download_translate(pre)
 
     csv_to_lang(path1, path2, path3)
 

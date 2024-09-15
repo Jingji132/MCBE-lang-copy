@@ -11,6 +11,8 @@ from crowdin_api.api_resources.source_strings.enums import SourceStringsPatchPat
 from crowdin_api.api_resources.source_strings.resource import SourceStringsResource
 from crowdin_api.api_resources.source_strings.types import SourceStringsPatchRequest
 
+import base_fun
+
 
 # 读取配置文件
 def init(version_type='Preview', csv=True):
@@ -161,28 +163,29 @@ def download_translate(pre=True):
     else:
         ver = 'Release'
     init(version_type=ver)
-    response = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN')
+    response_zh_cn = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN')
+    response_zh_tw = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-TW')
     client.translations.list_project_builds()
-    file_path = fr"D:\Users\Economy\git\Gitee\{git_re}\{ver}\zh-CN"
-    file_p = fr"{file_path}\processed.csv"
-    # ------------------------csv-----------------------------
-    print(response)
-    # 下载链接
-    download_url = response['data']['url']
-    if not os.path.isdir(file_path):
-        os.makedirs(file_path)
+    file_path = fr"D:\Users\Economy\git\Gitee\{git_re}\{ver}\download"
+    file_zh_cn = fr"{file_path}\zh_CN.csv"
+    file_zh_tw = fr"{file_path}\zh_TW.csv"
+    base_fun.make_dir(file_path)
+    # print(response_zh_cn, response_zh_tw)
     # 发起下载请求
-    response = requests.get(download_url)
+    response_zh_cn = requests.get(response_zh_cn['data']['url'])
+    response_zh_tw = requests.get(response_zh_tw['data']['url'])
+    # print(response_zh_cn)
 
-    # 检查响应状态码
-    if response.status_code == 200:
-        # 保存文件
-        with open(file_p, "wb+") as file:
-            file.write(response.content)
+    def download_csv(response, file):
+        if response.status_code == 200:
+            with open(file, "wb+") as file:
+                file.write(response.content)
+            print(f"{file}已下载并保存")
+        else:
+            print(f"{file}下载失败")
 
-        print("文件已下载并保存")
-    else:
-        print("下载文件失败")
+    download_csv(response_zh_cn, file_zh_cn)
+    download_csv(response_zh_tw, file_zh_tw)
 
 
 # update()
@@ -237,10 +240,11 @@ file_name = "None"  # r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processe
 
 
 if __name__ == '__main__':
-    v_name = ['Preview', 'Pre-Release', 'Release']
-    v_n = v_name[0]  # 0 1 2
+    pass
+    # v_name = ['Preview', 'Pre-Release', 'Release']
+    # v_n = v_name[0]  # 0 1 2
     # init(v_n, False)
     # test_string()
-    update_branch(v_n, reset=False)
+    # update_branch(v_n, reset=False)
     # init('Release')
     # print(client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN'))

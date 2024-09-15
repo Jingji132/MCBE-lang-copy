@@ -2,6 +2,7 @@
 # import openpyxl
 # import pickle
 import Convert_Lang
+import crowdin
 
 # def lang_to_process(origin, processed="processed.lang",
 #                     path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test", path_append=None,
@@ -157,4 +158,7 @@ import Convert_Lang
 
 # add_mclangcn()
 if __name__ == '__main__':
-    Convert_Lang.crowdin_to_mclangcn_csv(True)
+    pre = True
+    crowdin.download_translate(pre)
+    Convert_Lang.crowdin_to_mclangcn_csv(pre)
+    Convert_Lang.crowdin_to_mclangcn_csv(pre, 'zh_TW')

@@ -64,6 +64,7 @@ def process(origin_path, processed_path):
             i = i.replace("\t", " ")
             processed_line.append(i)
 
+    base_fun.make_dir_path(processed_path)
     with open(processed_path, "w", encoding='utf-8') as f:
         f.writelines(processed_line)
 

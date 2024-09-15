@@ -90,15 +90,36 @@ def info_o2n():
     R = Update_Lang.read_info(False, target_path, 'object')
     PR = Update_Lang.read_info(True, target_path, 'object', pre=True)
 
-    new={'Preview':P, 'Release':R, 'Pre-release':PR}
+    new = {'Preview': P, 'Release': R, 'Pre-release': PR}
     print(new)
 
     with open(rf'{target_path}/object/Version_info.json', 'w+', encoding='utf-8') as f:
         json.dump(new, f, indent=4)
 
 
+def get_translation_csv(path):
+    Produce_Lang.process(path, r'temp\trans_pro.lang')
+    trans_dict = Convert_Lang.processed_to_dict(r'temp\trans_pro.lang')
+    # print(trans_dict)
+    headers = ['Key', 'Source string', 'Context', 'Translation']
+    rows = []
+    for key in trans_dict:
+        if '.' in key:
+            s_key = '"' + key + '"'
+        else:
+            s_key = key
+        rows.append((s_key, None, None, trans_dict[key]))
+    with open(r'temp\trans_out.csv', 'w+', encoding='utf-8', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+        writer.writerows(rows)
+
+
 if __name__ == '__main__':
     info_o2n()
+
+    # get_translation_csv(r"D:\Users\Economy\Downloads\zh_TW.lang")
+
     # lang_init()
     # show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
     #
