@@ -127,7 +127,7 @@ def update_mc_lang(beta=True,
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
         if version_pre is not None:
-            Update_Lang.update_info(beta, target_path, ver_pre, 'object', pre=True, crowdin=True)
+            Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, crowdin=True)
 
     # 更新版本信息
     # upd_success = input("更新版本号？(Y/N)")
