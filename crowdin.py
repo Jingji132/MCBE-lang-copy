@@ -44,6 +44,15 @@ def update_file():
     print("更新完成！")
 
 
+def reset_file():
+    # 45/41/11 : Pre-Release/Release/Preview
+    reset_file_name = fr"D:\Users\Economy\git\Gitee\{git_re}\preset\processed.csv"
+    storage = client.storages.add_storage(open(reset_file_name, 'rb'))
+    # print(file_id, file_name)
+    client.source_files.update_file(file_id, storage['data']['id'])
+    print("重置完成！")
+
+
 def add_file():
     # 45/41/11 : Pre-Release/Release/Preview
     storage = client.storages.add_storage(open(file_name, 'rb'))
@@ -153,8 +162,8 @@ def update_branch(branch, version=None, reset=False):
     if not reset:
         update_file()
     else:
-        del_file()
-        add_file()
+        reset_file()
+        update_file()
 
 
 def download_translate(pre=True):
