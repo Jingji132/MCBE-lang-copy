@@ -242,7 +242,7 @@ def crowdin_to_mclangcn_csv(pre=True, lang_type='zh_CN'):
 # # ↑↑↑末尾位置的”processed.json“是要保存的json文件名称↑↑↑
 # #
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     # processed_to_dict_new(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang")
     # process_en_json(f"1.21.0 release_processed.lang", path=r"D:\Users\Economy\git\Gitee\MCBE-lang",
     #                 path_append="other",
@@ -255,5 +255,5 @@ def crowdin_to_mclangcn_csv(pre=True, lang_type='zh_CN'):
 
     # v_name = ['Preview', 'Pre-Release', 'Release']
     # v_n = v_name[0]  # 0 1 2
-    # process_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang",
-    #             rf"D:\Users\Economy\git\Gitee\lang-crowdin\{v_n}\processed.csv")
+    process_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang",
+                rf"D:\Users\Economy\git\Gitee\lang-crowdin\{v_n}\processed.csv")

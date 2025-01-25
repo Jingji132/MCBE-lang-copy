@@ -116,9 +116,9 @@ def get_translation_csv(path):
 
 
 if __name__ == '__main__':
-    info_o2n()
+    # info_o2n()
 
-    # get_translation_csv(r"D:\Users\Economy\Downloads\zh_TW.lang")
+    get_translation_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\text\oreui\zh_TW.lang")
 
     # lang_init()
     # show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")

@@ -40,6 +40,7 @@ def copy(origin_path,
     for file_name in file_names:
         en_lang = os.path.join(origin_path, file_name, r"texts\en_US.lang")
         zh_lang = os.path.join(origin_path, file_name, r"texts\zh_CN.lang")
+        tw_lang = os.path.join(origin_path, file_name, r"texts\zh_TW.lang")
         en_exist = os.path.isfile(en_lang)
         zh_exist = os.path.isfile(zh_lang)
         if not (en_exist or zh_exist):
@@ -51,6 +52,7 @@ def copy(origin_path,
                 shutil.copy(en_lang, subfolder_path)
             if zh_exist:
                 shutil.copy(zh_lang, subfolder_path)
+                shutil.copy(tw_lang, subfolder_path)
 
 
 # def copy2(origin_path,
