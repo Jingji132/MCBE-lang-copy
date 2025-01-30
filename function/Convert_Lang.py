@@ -3,8 +3,7 @@ import json
 import os
 import shutil
 
-from . import Produce_Lang
-import base_fun
+from . import Produce_Lang, base_fun
 from .Update_Lang import read_info, version
 from .crowdin import download_translate
 

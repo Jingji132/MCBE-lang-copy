@@ -7,7 +7,7 @@ from crowdin_api.api_resources.enums import PatchOperation
 from crowdin_api.api_resources.source_files.enums import BranchPatchPath
 from crowdin_api.api_resources.source_files.types import BranchPatchRequest
 
-import base_fun
+from . import base_fun
 
 
 # from crowdin_api.api_resources.source_strings.enums import SourceStringsPatchPath

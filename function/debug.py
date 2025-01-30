@@ -4,10 +4,7 @@ import json
 import os.path
 import pickle
 
-from . import Convert_Lang
-from . import Produce_Lang
-from . import Update_Lang
-from . import crowdin
+from . import Convert_Lang, Produce_Lang, Update_Lang, crowdin
 
 
 def pre_release(ver):

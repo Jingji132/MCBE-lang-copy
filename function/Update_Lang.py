@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 
-import base_fun
+from . import base_fun
 
 
 def find(beta=True):

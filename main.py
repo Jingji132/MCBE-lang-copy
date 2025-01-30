@@ -1,6 +1,5 @@
-import base_fun
-
-from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, debug, Generate_Template
+from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, debug, Generate_Template, \
+    base_fun
 
 
 def update_mc_lang(beta=True,

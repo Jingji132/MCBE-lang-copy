@@ -1,7 +1,6 @@
 import os
 
-from . import Generate_Template
-import base_fun
+from . import Generate_Template, base_fun
 
 
 def save(template=None,

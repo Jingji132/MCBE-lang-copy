@@ -3,7 +3,7 @@ import pickle
 
 from git import Repo
 
-import base_fun
+from . import base_fun
 
 
 def switch(repo_path, new_branch):

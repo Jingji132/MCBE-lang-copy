@@ -2,7 +2,7 @@ import json
 import os
 import pickle
 
-import base_fun
+from . import base_fun
 
 default_template = [
     [
