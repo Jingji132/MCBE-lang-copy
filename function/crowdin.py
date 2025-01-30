@@ -1,17 +1,18 @@
-import os.path
+import json
 
 import crowdin_api
-import json
-import requests
 import crowdin_api.exceptions
+import requests
 from crowdin_api.api_resources.enums import PatchOperation
 from crowdin_api.api_resources.source_files.enums import BranchPatchPath
 from crowdin_api.api_resources.source_files.types import BranchPatchRequest
-from crowdin_api.api_resources.source_strings.enums import SourceStringsPatchPath
-from crowdin_api.api_resources.source_strings.resource import SourceStringsResource
-from crowdin_api.api_resources.source_strings.types import SourceStringsPatchRequest
 
 import base_fun
+
+
+# from crowdin_api.api_resources.source_strings.enums import SourceStringsPatchPath
+# from crowdin_api.api_resources.source_strings.resource import SourceStringsResource
+# from crowdin_api.api_resources.source_strings.types import SourceStringsPatchRequest
 
 
 # 读取配置文件
@@ -222,7 +223,7 @@ def download_translate(pre=True):
 t = ''
 config = f"config{t}.json"
 git_re = f'lang-crowdin{t}'
-with open(rf"D:\Users\Economy\git\Gitee\mcbe-lang-copy\{config}", "r") as config_file:  # config.json
+with open(rf"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config\{config}", "r") as config_file:  # config.json
     config_data = json.load(config_file)
 token = config_data["token"]
 project_id = config_data["project_id"]

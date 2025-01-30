@@ -1,14 +1,6 @@
-import Update_Lang
-import Produce_Lang
-
-import Generate_Template
-import Convert_Lang
 import base_fun
-import debug
 
-import trivial
-import git_fun
-import crowdin
+from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, debug, Generate_Template
 
 
 def update_mc_lang(beta=True,

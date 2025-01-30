@@ -3,53 +3,62 @@ import json
 import zipfile
 import pickle
 import csv
-from trivial import get_url
+from function.trivial import get_url
 
 
-def find_je_lang(game_path=r"E:\Minecraft\.minecraft", target_path=r"D:\Users\Economy\git\Gitee\MCJE-lang"):
+def find_je_lang(game_path=r"E:\Minecraft\.minecraft", target_path=r"D:\Users\Economy\git\Gitee\MCJE-lang",
+                 ver=None, idx=None):
     def get_je_ver():
         page = get_url('https://piston-meta.mojang.com/mc/game/version_manifest.json', 100)
+        tgp = os.path.join(target_path, 'ver')
         if page is None:
-            f = open(r"D:\Users\Economy\git\Gitee\MCJE-lang\ver", 'rb')
-            ver = pickle.load(f)
+            f = open(tgp, 'rb')
+            _ver = pickle.load(f)
             f.close()
         else:
-            ver = page.json()['versions'][0]['id']
-            f = open(r"D:\Users\Economy\git\Gitee\MCJE-lang\ver", 'wb')
-            pickle.dump(ver, f)
+            _ver = page.json()['versions'][0]['id']
+            f = open(tgp, 'wb')
+            pickle.dump(_ver, f) # type: ignore
             f.close()
-        return ver
+        return _ver
 
-    def find_en_us(path):
-        ver = get_je_ver()
-        print("最新版本:", ver)
-        jar_path = os.path.join(path, "versions", ver, ver + ".jar")
+    def find_en_us(_path, _ver):
+        print("最新版本:", _ver)
+        jar_path = os.path.join(_path, "versions", _ver, _ver + ".jar")
         if not os.path.isfile(jar_path):
             print("似乎没有下载游戏资源", os.path.isfile(jar_path))
             return None
-        with zipfile.ZipFile(jar_path) as jar:
+        with zipfile.ZipFile(jar_path) as jar: # type: ignore
             with jar.open("assets/minecraft/lang/en_us.json") as f:
                 lang = json.load(f)
         return lang
 
-    def find_lang(path, lang_type='zh_cn'):
-        assets_path = os.path.join(path, r"assets")
+    def find_lang(_path, lang_type='zh_cn'):
+        assets_path = os.path.join(_path, r"assets")
         indexes_path = os.path.join(assets_path, r"indexes")
-        index_num = 0
-        for i in os.listdir(indexes_path):
-            num = int(i.replace(".json", ''))
-            if num > index_num:
-                index_num = num
+        if idx is None:
+            index_num = 0
+            for i in os.listdir(indexes_path):
+                i_num = i.replace(".json", '')
+                if not i_num.isdigit():
+                    continue
+                num = int(i_num)
+                if num > index_num:
+                    index_num = num
+        else:
+            index_num = idx
         indexes_path = os.path.join(indexes_path, str(index_num) + ".json")
         with open(indexes_path, 'r', encoding='utf-8') as f:
             zh_cn_name = json.load(f)['objects'][f'minecraft/lang/{lang_type}.json']['hash']
         zh_cn_folder = zh_cn_name[0:2]
         zh_cn_path = os.path.join(assets_path, 'objects', zh_cn_folder, zh_cn_name)
         with open(zh_cn_path, 'r', encoding='utf-8') as f:
-            zh_cn_lang = json.load(f)
-        return zh_cn_lang
+            _zh_cn_lang = json.load(f)
+        return _zh_cn_lang
 
-    en_us_lang = find_en_us(game_path)
+    if ver is None:
+        ver = get_je_ver()
+    en_us_lang = find_en_us(game_path, ver)
     if en_us_lang is None:
         return
     # create_lang(en_us_lang, target_path, "en_us.lang")
@@ -60,8 +69,9 @@ def find_je_lang(game_path=r"E:\Minecraft\.minecraft", target_path=r"D:\Users\Ec
     return en_us_lang, zh_cn_lang, zh_tw_lang
 
 
-def create_lang(lang, path, name):
-    file_path = os.path.join(path, name)
+
+def create_lang(lang, _path, name):
+    file_path = os.path.join(_path, name)
     with open(file_path, 'w', encoding='utf-8') as f:
         for key in lang:
             line = key + 'REPLACE' + repr(lang[key]) + 'REPLACE'
@@ -98,6 +108,7 @@ def translate_memory2(en, zh, tw, _path, name):
 
 
 if __name__ == '__main__':
+    # en_us, zh_cn, zh_tw = find_je_lang(ver='1.12.2', idx='1.12')
     en_us, zh_cn, zh_tw = find_je_lang()
     path = r"D:\Users\Economy\git\Gitee\MCJE-lang"
     # create_lang(en_us, path, 'en_US.lang')

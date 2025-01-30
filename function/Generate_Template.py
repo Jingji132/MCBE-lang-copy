@@ -106,7 +106,7 @@ def read_json(path=r"...\MCBE-lang_UPD_test\object\template.json"):
 
 def save_json(template, path=r"...\MCBE-lang\object\template.json"):
     with open(path, 'w+', encoding='utf-8') as f:
-        json.dump(template, f, ensure_ascii=False, indent=4)
+        json.dump(template, f, ensure_ascii=False, indent=4) # type: ignore
         f.close()
 
 

@@ -3,7 +3,6 @@ import pickle
 
 from git import Repo
 
-import Update_Lang
 import base_fun
 
 
@@ -80,7 +79,7 @@ def diff_info(list_new, ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\
             if base_fun.compare_ver(ver, ver_old, complex_return=False):
                 info = {'ver': ver, 'list': list_new}
                 with open(path, 'wb') as f:
-                    pickle.dump(info, f)
+                    pickle.dump(info, f) # type: ignore
                     f.close()
             return info['list']
         else:

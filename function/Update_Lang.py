@@ -1,7 +1,6 @@
 import json
 import os
 import shutil
-import pickle
 
 import base_fun
 
@@ -126,7 +125,7 @@ def init_info(path):
     info = {"git": False, "crowdin": False, "ver": [0, 0, 0, 0]}
     ver_info = {'Preview': info, 'Release': info, 'Pre-release': info}
     with open(path, 'w+', encoding='utf-8') as f:
-        json.dump(ver_info, f, indent=4)
+        json.dump(ver_info, f, indent=4) # type: ignore
     return ver_info
 
 
@@ -166,7 +165,7 @@ def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=
         path = os.path.join(path, append)
     path = os.path.join(path, filename)
     with open(path, 'w+', encoding='utf-8') as f:
-        json.dump(info, f, indent=4)
+        json.dump(info, f, indent=4) # type: ignore
 
 
 def update_lang(beta=True,

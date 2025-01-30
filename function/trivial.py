@@ -3,10 +3,7 @@ from random import randint
 import requests
 import difflib
 
-import Convert_Lang
-import Generate_Template
-import Produce_Lang
-import crowdin
+from . import Convert_Lang, Produce_Lang
 
 
 def find_in_dict(the_dict, key, full=True):
@@ -19,14 +16,14 @@ def find_in_dict(the_dict, key, full=True):
         return ''
 
 
-def fuzzy_matching(texts_list, value, similarity=0.8, max=1):
+def fuzzy_matching(texts_list, value, similarity=0.8, _max=1):
     texts_score = {}
     for i in texts_list:
         score = difflib.SequenceMatcher(None, i, value).quick_ratio()
         if score < similarity:
             continue
         texts_score[i] = score
-        if score > max:
+        if score > _max:
             break
     texts_score = sorted(texts_score.items(), key=lambda x: x[1], reverse=False)
     if len(texts_score) > 0:
@@ -90,19 +87,17 @@ def update_custom_tips(path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_tes
 def get_url(url, time_set=200):
     headers = {
         'user-agent': f'Mozilla/5.0 (Linux; Android {randint(6, 14)}; OnePlus {randint(7, 11)}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.181 Mobile Safari/537.36'}
-    response = None
-    for time in range(time_set, time_set + 3):
+    for timeout in range(time_set, time_set + 3):
         try:
-            response = requests.get(url, headers=headers, timeout=time)
-            break
-        except:
-            time += 1
+            response = requests.get(url, headers=headers, timeout=timeout)
+            print(f"Request succeeded with timeout: {timeout}")
+            return response
+        except requests.exceptions.RequestException as e:
+            print(f"Request failed with timeout: {timeout}, error: {e}")
             continue
-    if response is None:
-        print("请求超时！")
-        return None
     else:
-        return response
+        print("All attempts failed.")
+        return None
 
 
 def only_zh_upd(diff_list):
@@ -116,7 +111,7 @@ def only_zh_upd(diff_list):
 # get_url('https://google.com', 5)
 def test_for_copy2():
     paths = os.walk(
-        r"C:\Program Files\WindowsApps\Microsoft.MinecraftWindowsBeta_1.20.5022.0_x64__8wekyb3d8bbwe\data\resource_packs")
+        r'C:\Program Files\WindowsApps\Microsoft.MinecraftWindowsBeta_1.20.5022.0_x64__8wekyb3d8bbwe\data\resource_packs')
     print('\n')
     path_list = []
     for path, dir_lst, file_lst in paths:
@@ -148,5 +143,4 @@ if __name__ == '__main__':
 
     # crowdin.update_branch('Pre-Release')
 
-    if False:
-        print(1)
+    pass

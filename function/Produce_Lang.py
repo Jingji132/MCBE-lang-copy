@@ -1,6 +1,6 @@
 import os
 
-import Generate_Template
+from . import Generate_Template
 import base_fun
 
 
@@ -25,9 +25,8 @@ def save(template=None,
         if not os.path.exists(lang_path):
             print("未找到当前模板中的", folder, "/", sub_folder, lang_type, "，已跳过相关操作")
             return False
-        with open(lang_path, "r", encoding='utf-8') as f:
-            line = f.readlines()
-            f.close()
+        with open(lang_path, "r", encoding='utf-8') as f1:
+            line = f1.readlines()
         if sub_folder == "vanilla":
             line[1] = f"## {pack_name}\n"  # Minecraft译名修正
         else:

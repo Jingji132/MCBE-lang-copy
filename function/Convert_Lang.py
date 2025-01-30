@@ -3,10 +3,10 @@ import json
 import os
 import shutil
 
-import Produce_Lang
+from . import Produce_Lang
 import base_fun
-from Update_Lang import read_info, version
-from crowdin import download_translate
+from .Update_Lang import read_info, version
+from .crowdin import download_translate
 
 
 def processed_to_dict(lang_path):
@@ -43,14 +43,14 @@ def processed_to_dict_new(lang_path):
 def convert_zh_lang(is_json=False, is_csv=False):
     source_path = r"D:\Users\Economy\git\GitHub\mclangcn\texts"
     process_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\mclangcn"
-    Produce_Lang.process(origin_path=rf"{source_path}\zh_CN.lang", path=process_path)
+    Produce_Lang.process(origin_path=rf"{source_path}\zh_CN.lang", processed_path=process_path)
 
     path4 = os.path.join(process_path, 'processed.lang')
 
     if is_json:
         convert_path = os.path.join(process_path, 'processed.json')
         with open(convert_path, 'w+', encoding='utf-8') as f:
-            json.dump(processed_to_dict(path4), f, ensure_ascii=False)
+            json.dump(processed_to_dict(path4), f, ensure_ascii=False) # type: ignore
 
     if is_csv:
         input_path = r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0 release_processed.lang"
@@ -75,7 +75,7 @@ def process_en_json(process, path=r"D:\Users\Economy\git\Gitee\MCBE-lang", path_
         path = os.path.join(path, process)
 
     with open(json_path, 'w+', encoding='utf-8') as f:
-        json.dump(processed_to_dict_new(path), f, ensure_ascii=False)
+        json.dump(processed_to_dict_new(path), f, ensure_ascii=False) # type: ignore
 
 
 def lang_to_dict(lang_path):
@@ -237,9 +237,9 @@ def crowdin_to_mclangcn_csv(pre=True, lang_type='zh_CN'):
 # path_lang = r"D:\test"  # ←←←要读取的lang文件所在路径（不含文件名称）
 # path_save = r"D:\test"  # ←←←要保存的json文件所在路径（不含文件名称）
 # lang_to_process('en_US.lang', "processed.lang", path=path_save, origin_path=path_lang)
-# # ↑↑↑首个参数是要读取的lang文件名称，当前为”en_US.lang“↑↑↑
+# # ↑↑↑首个参数是要读取的lang文件名称，当前为"en_US.lang"↑↑↑
 # process_en_json("processed.lang", path=path_save, json_path=os.path.join(path_save, 'processed.json'))
-# # ↑↑↑末尾位置的”processed.json“是要保存的json文件名称↑↑↑
+# # ↑↑↑末尾位置的"processed.json"是要保存的json文件名称↑↑↑
 # #
 
 if __name__ == '__main__':
@@ -255,5 +255,6 @@ if __name__ == '__main__':
 
     # v_name = ['Preview', 'Pre-Release', 'Release']
     # v_n = v_name[0]  # 0 1 2
-    process_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang",
-                rf"D:\Users\Economy\git\Gitee\lang-crowdin\{v_n}\processed.csv")
+    # process_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.10.23_processed.lang",
+                # rf"D:\Users\Economy\git\Gitee\lang-crowdin\{v_n}\processed.csv")
+    pass
