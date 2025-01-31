@@ -68,14 +68,14 @@ def update_mc_lang(beta=True,
                          fr"{target_path}/process file/{processed_file}")
 
     # 判断预发布版情况（Pre-release）
-    if compare or not info_old['crowdin']:
+    version_pre = None
+    info_pre = Update_Lang.read_info(True, target_path, 'object', pre=True)
+    if compare or not info_old['crowdin'] or not info_pre['crowdin']:
         preview_reset = False
-        version_pre = None
         ver_pre = None
         if beta:
             diff_list = git_fun.diff_info(git_fun.diff(), ver)
             print(diff_list)
-            info_pre = Update_Lang.read_info(beta, target_path, 'object', pre=True)
             ver_pre = info_pre['ver']
             # print(trivial.only_zh_upd(diff_list) and Update_Lang.compare_ver(ver, ver_pre, complex_return=False))
             if trivial.only_zh_upd(diff_list):
@@ -85,6 +85,7 @@ def update_mc_lang(beta=True,
                 else:
                     ver_pre = ver
                     version_pre = version
+                    Update_Lang.update_info(True, target_path, 'object', ver_pre, pre=True, crowdin=False)
             elif major:
                 print("出现跨版本更新，上一版本视为预发布版")
                 if ver_old == ver_pre and info_pre['crowdin']:
@@ -92,18 +93,23 @@ def update_mc_lang(beta=True,
                 else:
                     ver_pre = ver_old
                     version_pre = Update_Lang.version(ver_old)
+                    Update_Lang.update_info(True, target_path, 'object', ver_pre, pre=True, crowdin=False)
 
-            if version_pre is not None:
-                input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
-                processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
-                Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version_pre}_processed.lang",
-                                         output_path=processed_path,
-                                         special_key=True)
-                trivial.add_bad_translation(template, target_path,
-                                            rf"{target_path}\process file\{version_pre}_zh_BAD.lang",
-                                            processed_path)
-                crowdin.update_branch("Pre-Release", version_pre, reset=False)
-                preview_reset = True
+        if version_pre is None and not info_pre['crowdin']:
+            version_pre = info_pre['ver']
+            print("之前有预发布版未更新，即将更新！")
+
+        if version_pre is not None:
+            input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
+            processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
+            Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version_pre}_processed.lang",
+                                     output_path=processed_path,
+                                     special_key=True)
+            trivial.add_bad_translation(template, target_path,
+                                        rf"{target_path}\process file\{version_pre}_zh_BAD.lang",
+                                        processed_path)
+            crowdin.update_branch("Pre-Release", version_pre, reset=False)
+            Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, crowdin=True)
 
         # 更新Crowdin
         processed_path = rf"{crowdin_path}\{version_type}\processed.csv"
@@ -117,8 +123,7 @@ def update_mc_lang(beta=True,
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
-        if version_pre is not None:
-            Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, crowdin=True)
+
 
     # 更新版本信息
     # upd_success = input("更新版本号？(Y/N)")
