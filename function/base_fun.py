@@ -60,7 +60,7 @@ def compare_ver(ver1, ver2, complex_return=False):
         return flag1
 
 
-def ver_str(beta, pre=False):
+def ver_type_str(beta, pre=False):
     if beta:
         if pre:
             return 'Pre-release'
@@ -68,3 +68,11 @@ def ver_str(beta, pre=False):
             return 'Preview'
     else:
         return 'Release'
+
+
+def ver_str(ver, full=True):
+    if full:
+        version = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
+    else:
+        version = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2])
+    return version

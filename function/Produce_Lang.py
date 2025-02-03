@@ -1,6 +1,6 @@
 import os
 
-from . import Generate_Template, base_fun
+from . import base_fun
 
 
 def save(template=None,
@@ -36,7 +36,7 @@ def save(template=None,
         return line
 
     if template is None:
-        template = Generate_Template.old_to_new([[["vanilla", 0, 0]]])
+        template = {"text": {"vanilla": {"display": "","release": None,"preview": None}}}
 
     base_fun.make_dir_path(save_path)
     with open(save_path, "w", encoding='utf-8') as f:

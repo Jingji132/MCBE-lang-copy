@@ -3,9 +3,7 @@ import json
 import os
 import shutil
 
-from . import Produce_Lang, base_fun
-from .Update_Lang import read_info, version
-from .crowdin import download_translate
+from . import base_fun
 
 
 def processed_to_dict(lang_path):
@@ -37,33 +35,6 @@ def processed_to_dict_new(lang_path):
         else:
             add_dict[line[0]] = {"text": line[1].replace('\n', ''), "crowdinContext": ''}
     return add_dict
-
-
-def convert_zh_lang(is_json=False, is_csv=False):
-    source_path = r"D:\Users\Economy\git\GitHub\mclangcn\texts"
-    process_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\mclangcn"
-    Produce_Lang.process(origin_path=rf"{source_path}\zh_CN.lang", processed_path=process_path)
-
-    path4 = os.path.join(process_path, 'processed.lang')
-
-    if is_json:
-        convert_path = os.path.join(process_path, 'processed.json')
-        with open(convert_path, 'w+', encoding='utf-8') as f:
-            json.dump(processed_to_dict(path4), f, ensure_ascii=False) # type: ignore
-
-    if is_csv:
-        input_path = r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0 release_processed.lang"
-        the_dict = processed_to_dict_new(input_path)
-        lang_dict = processed_to_dict(path4)
-        convert_path = os.path.join(process_path, 'processed.csv')
-        headers = ['Key', 'Source string', 'Context', 'Translation']
-        rows = []
-        for key in the_dict:
-            rows.append((key, the_dict[key]['text'], the_dict[key]['crowdinContext'], lang_dict[key]))
-        with open(convert_path, 'w+', encoding='utf-8', newline='') as f:
-            writer = csv.writer(f)
-            writer.writerow(headers)
-            writer.writerows(rows)
 
 
 def process_en_json(process, path=r"D:\Users\Economy\git\Gitee\MCBE-lang", path_append=None,
@@ -158,22 +129,6 @@ def json_to_lang(json_path, lang_path, template):
         f.writelines(lang)
 
 
-# process_en_json()
-def crowdin_to_mclangcn_json(pre=True):
-    if pre:
-        ver = 'Pre-'
-    else:
-        ver = ''
-    path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\zh-CN\processed.json"
-    path2 = r"D:\Users\Economy\git\GitHub\mclangcn\texts\zh_CN.lang"
-    version_pre = version(read_info(True, r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=True)['ver'])
-    print(version_pre)
-    path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\other\{version_pre}_processed.lang"
-
-    download_translate()
-
-    json_to_lang(path1, path2, path3)
-
 
 def csv_to_lang(csv_path, lang_path, temp_path):
     lang_dict = {}
@@ -210,20 +165,7 @@ def csv_to_lang(csv_path, lang_path, temp_path):
         f.writelines(lang)
 
 
-def crowdin_to_mclangcn_csv(pre=True, lang_type='zh_CN'):
-    if pre:
-        ver = 'Pre-'
-    else:
-        ver = ''
-    path1 = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver}Release\download\{lang_type}.csv"
-    path2 = fr"D:\Users\Economy\git\GitHub\mclangcn\texts\{lang_type}.lang"
-    version_v = version(read_info(beta=pre, path=r'D:\Users\Economy\git\Gitee\MCBE-lang\object', pre=pre)['ver'])
-    if not pre:
-        version_l = version_v.split('.')
-        version_v = version_l[0]+'.'+version_l[1]+'.'+version_l[2]+' Release'
-    path3 = rf"D:\Users\Economy\git\Gitee\MCBE-lang\process file\{version_v}_processed.lang"
 
-    csv_to_lang(path1, path2, path3)
 
 
 # target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"

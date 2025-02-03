@@ -102,7 +102,7 @@ def trans_ver(version_internal, beta=True):
     return version, ver
 
 
-def version(ver):
+def version_str(ver):
     version_read = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
     return version_read
 
@@ -144,7 +144,7 @@ def read_info_full(path, append=None, filename='Version_info.json'):
 
 
 def read_info(beta, path, append=None, pre=False, filename='Version_info.json'):
-    name = base_fun.ver_str(beta, pre)
+    name = base_fun.ver_type_str(beta, pre)
     info = read_info_full(path, append, filename)
     return info[name]
 
@@ -152,7 +152,7 @@ def read_info(beta, path, append=None, pre=False, filename='Version_info.json'):
 def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=None, filename='Version_info.json'):
     # print(beta, pre)
     info = read_info_full(path, append, filename)
-    name = base_fun.ver_str(beta, pre)
+    name = base_fun.ver_type_str(beta, pre)
 
     if isinstance(git, bool):
         info[name]['git'] = git

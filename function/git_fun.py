@@ -88,6 +88,53 @@ def diff_info(list_new, ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\
         print("diff_info: Not found")
 
 
+def tag(repo_path, tag_name):
+    """
+    获取当前分支的最新提交哈希值
+    :param repo_path: 仓库路径
+    :return: 当前提交的哈希值
+    """
+    repo = Repo(repo_path)
+    if repo.head.is_detached:
+        # 如果当前是分离头状态，直接获取当前提交的哈希值
+        _commit = repo.head.commit
+    else:
+        # 如果当前在分支上，获取分支的最新提交哈希值
+        _commit = repo.head.ref.commit
+    # tag_name = 'version-test'
+    repo.create_tag(tag_name, _commit, message=tag_name)
+
+
+def pre_merge(repo_path, _target_branch, ver):
+    """
+    将指定提交及其之前的提交压缩为一个提交，并合并到目标分支
+    :param repo_path: 仓库路径
+    :param _target_branch: 目标分支名称
+    :param ver: 新提交的版本号（用于提交信息和标签）
+    """
+    _ver_l = base_fun.ver_str(ver)
+    _ver_s = base_fun.ver_str(ver, False)
+
+    repo = Repo(repo_path)
+    if repo.bare:
+        raise ValueError("仓库无效")
+
+    commit_hash = repo.tags[_ver_l].commit.hexsha
+
+    # 切换到目标分支
+    repo.git.checkout(_target_branch)
+
+    # 创建一个新的提交，将指定提交及其之前的提交压缩为一个
+    repo.git.merge("--squash", commit_hash)
+    commit_message = _ver_l
+    repo.git.commit("-m", commit_message)
+
+    # 创建标签
+    new_tag_name = f"{_ver_s}-pre"
+    repo.create_tag(new_tag_name, message=commit_message)
+
+    print(f"提交已压缩并合并到 {_target_branch}，新标签 {new_tag_name} 已创建")
+
 if __name__ == '__main__':
     print(diff())
 

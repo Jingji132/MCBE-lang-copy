@@ -1,4 +1,4 @@
-from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, debug, Generate_Template, \
+from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, Generate_Template, \
     base_fun
 
 
@@ -13,7 +13,7 @@ def update_mc_lang(beta=True,
     print("本机安装版本：", ver)
     info_old = Update_Lang.read_info(beta, target_path, 'object')
     if info_old is None:
-        debug.lang_init()
+        trivial.lang_init()
         print('未找到版本信息文件（object）,已在目录下创建')
         info_old = Update_Lang.read_info(beta, target_path, 'object')
     ver_old = info_old['ver']
@@ -45,6 +45,7 @@ def update_mc_lang(beta=True,
 
         # git提交
         git_fun.commit(target_path, commit_message=version)
+        git_fun.tag(target_path, tag_name=version)
 
         Update_Lang.update_info(beta, target_path, 'object', git=True)
 
@@ -85,22 +86,30 @@ def update_mc_lang(beta=True,
                 else:
                     ver_pre = ver
                     version_pre = version
-                    Update_Lang.update_info(True, target_path, 'object', ver_pre, pre=True, crowdin=False)
+                    Update_Lang.update_info(True, target_path, 'object', ver_pre,
+                                            pre=True, crowdin=False, git=False)
             elif major:
                 print("出现跨版本更新，上一版本视为预发布版")
                 if ver_old == ver_pre and info_pre['crowdin']:
                     print("上一板本已是预发布版，并且已更新过，不再更新！")
                 else:
                     ver_pre = ver_old
-                    version_pre = Update_Lang.version(ver_old)
-                    Update_Lang.update_info(True, target_path, 'object', ver_pre, pre=True, crowdin=False)
+                    version_pre = Update_Lang.version_str(ver_old)
+                    Update_Lang.update_info(True, target_path, 'object', ver_pre,
+                                            pre=True, crowdin=False, git=False)
 
         if version_pre is None and not info_pre['crowdin']:
-            version_pre = info_pre['ver']
+            ver_pre = info_pre['ver']
+            version_pre = base_fun.ver_str(ver_pre)
             print("之前有预发布版未更新，即将更新！")
 
         if version_pre is not None:
             input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
+
+            if not info_pre['git']:
+                git_fun.pre_merge(target_path, "Pre-Release", ver_pre)
+                Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, git=True)
+
             processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
             Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version_pre}_processed.lang",
                                      output_path=processed_path,
@@ -123,7 +132,6 @@ def update_mc_lang(beta=True,
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
-
 
     # 更新版本信息
     # upd_success = input("更新版本号？(Y/N)")

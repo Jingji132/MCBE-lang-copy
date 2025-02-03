@@ -46,7 +46,7 @@ d_t_json = {
         },
     },
     "other": {
-        "custom": {
+        "hidden": {
             "display": "",
             "release": None,
             "preview": None
@@ -187,7 +187,7 @@ def old_to_new(old):
 #     return template
 
 
-def update_json(beta, path=r"...\MCBE-lang_UPD_test", deny_list=None):
+def update_json(beta, path=r"...\MCBE-lang_UPD_test", deny_list=None, pre=False):
     def ensure_display(display_):
         while True:
             ensure_in = input(f"将显示为“{display_.replace('_', ' ').title()}”，确定？（Y/n）")

@@ -4,7 +4,7 @@ import json
 import os.path
 import pickle
 
-from . import Convert_Lang, Produce_Lang, Update_Lang, crowdin
+from function import Convert_Lang, Produce_Lang, Update_Lang, crowdin
 
 
 def pre_release(ver):
@@ -12,11 +12,11 @@ def pre_release(ver):
     :param ver: '[x, x, x, x]' 想要将Pre-release回退到的版本，如'1.21.0.26'为[1, 21, 0, 26]
     :return:
     """
-    version = Update_Lang.version(ver)
+    version = Update_Lang.version_str(ver)
     _target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
     json_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.json"
 
-    Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="../other",
+    Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="",
                                  json_path=json_path)
     crowdin.update_branch("Pre-Release", version, reset=False)
     with open(r"D:\Users\Economy\git\Gitee\MCBE-lang\object\Pre-release", 'wb') as f:
@@ -30,11 +30,11 @@ def change_version(ver, ver_type='Preview'):
     :param ver: [xx, xx, xx, xx]
     :return:
     """
-    version = Update_Lang.version(ver)
+    version = Update_Lang.version_str(ver)
     _target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
     json_path = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver_type}\processed.json"
 
-    Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="../other",
+    Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="",
                                  json_path=json_path)
     crowdin.update_branch(ver_type, version, reset=False)
     with open(rf"D:\Users\Economy\git\Gitee\MCBE-lang\object\{ver_type}", 'wb') as f:
@@ -66,17 +66,6 @@ def show_object(path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object"):
             obj = pickle.load(f)
             print(filename, ':\t', obj, '\ttype:', type(obj))
             f.close()
-
-
-def lang_init(path=r"D:\Users\Economy\git\Gitee\MCBE-lang-test1"):
-    # n_path = rf'{path}\object'
-    # os.makedirs(n_path)
-    for beta in [True, False]:
-        for pre in [True, False]:
-            # print(beta, pre)
-            Update_Lang.update_info(beta, path, 'object', pre=pre)
-
-    return
 
 
 target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
@@ -115,7 +104,7 @@ def get_translation_csv(path):
 if __name__ == '__main__':
     # info_o2n()
 
-    get_translation_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\text\oreui\zh_TW.lang")
+    # get_translation_csv(r"D:\Users\Economy\git\Gitee\MCBE-lang\text\oreui\zh_TW.lang")
 
     # lang_init()
     # show_object(r"D:\Users\Economy\git\Gitee\MCBE-lang\object")
@@ -132,3 +121,4 @@ if __name__ == '__main__':
     #     for row in reader:
     #         if row[int('Key')] in ["tips.game.3"]:
     #             print(row[int('Key')])
+    pass
