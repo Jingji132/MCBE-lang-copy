@@ -72,7 +72,7 @@ def update_mc_lang(beta=True,
     version_pre = None
     info_pre = Update_Lang.read_info(True, target_path, 'object', pre=True)
     if compare or not info_old['crowdin'] or not info_pre['crowdin']:
-        preview_reset = False
+        preview_reset = True
         ver_pre = None
         if beta:
             diff_list = git_fun.diff_info(git_fun.diff(), ver)
@@ -107,7 +107,7 @@ def update_mc_lang(beta=True,
             input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
 
             if not info_pre['git']:
-                git_fun.pre_merge(target_path, "Pre-Release", ver_pre)
+                git_fun.pre_tag(target_path, "Preview", ver_pre)
                 Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, git=True)
 
             processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"

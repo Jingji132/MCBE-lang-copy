@@ -105,9 +105,9 @@ def tag(repo_path, tag_name):
     repo.create_tag(tag_name, _commit, message=tag_name)
 
 
-def pre_merge(repo_path, _target_branch, ver):
+def pre_tag(repo_path, _target_branch, ver):
     """
-    将指定提交及其之前的提交压缩为一个提交，并合并到目标分支
+    将PR版本打标签
     :param repo_path: 仓库路径
     :param _target_branch: 目标分支名称
     :param ver: 新提交的版本号（用于提交信息和标签）
