@@ -26,12 +26,12 @@ def save(template=None,
             return False
         with open(lang_path, "r", encoding='utf-8') as f1:
             line = f1.readlines()
+        if display == '':
+            display = sub_folder.replace("_", " ").title()
+        line.insert(0, f"\n## {display} strings\n")
         if sub_folder == "vanilla":
-            line[1] = f"## {pack_name}\n"  # Minecraft译名修正
-        else:
-            if display == '':
-                display = sub_folder.replace("_", " ").title()
-            line.insert(0, f"\n## {display} strings\n")
+            # line[1] = f"## {pack_name}\n"  # Minecraft译名修正
+            line.insert(0, f"## {pack_name}\n" )
         line.append("\n")
         return line
 
