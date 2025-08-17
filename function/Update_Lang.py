@@ -98,7 +98,7 @@ def trans_ver(version_internal, beta=True):
     if beta:
         version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3) + "." + str(ver_4)
     else:
-        version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3) + " release"
+        version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3)
     return version, ver
 
 
