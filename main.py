@@ -9,7 +9,11 @@ def update_mc_lang(beta=True,
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
         return
-    version, ver = Update_Lang.trans_ver(version_in, beta)
+    if beta:
+        version, ver = Update_Lang.trans_ver(version_in, beta)
+    else:
+        version, ver = Update_Lang.trans_ver_old(version_in, beta)
+    #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 1.21.130更新后移除else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     print("本机安装版本：", ver)
     info_old = Update_Lang.read_info(beta, target_path, 'object')
     if info_old is None:
@@ -108,7 +112,7 @@ def update_mc_lang(beta=True,
             preview_reset = True
 
             if not info_pre['git']:
-                git_fun.pre_tag(target_path, "Preview", ver_pre)
+                git_fun.pre_tag(target_path, ver_pre)
                 Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, git=True)
 
             processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
@@ -127,8 +131,8 @@ def update_mc_lang(beta=True,
                                  output_path=processed_path,
                                  special_key=True)
         trivial.add_bad_translation(template, target_path,
-                                    rf"{target_path}\process file\{version}_zh_BAD.lang",
-                                    processed_path)
+                                    rf"{target_path}\process file",
+                                    processed_path, version)
         crowdin.update_branch(version_type, version, reset=preview_reset)
         Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 

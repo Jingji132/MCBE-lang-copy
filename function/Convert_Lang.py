@@ -93,7 +93,8 @@ def csv_add_context(add_dict, csv_path, text=''):
             key = row[0].replace('"', '')
             if row and key in add_dict:
                 new_row = row[:]
-                new_row[2] = row[2] + text + add_dict[key] + '\n'
+                # new_row[2] = row[2] + text + add_dict[key] + '\n'
+                new_row[2] = row[2] + text + add_dict[key]
                 writer.writerow(new_row)
             else:
                 writer.writerow(row)

@@ -13,7 +13,8 @@ def find(beta=True):
     if beta:
         name_pre = "Microsoft.MinecraftWindowsBeta_"
     else:
-        name_pre = "Microsoft.MinecraftUWP_"
+        # name_pre = "Microsoft.MinecraftUWP_"
+        name_pre = "MICROSOFT.MINECRAFTUWP_"
     folder_name = None
     for i in find_list:
         if name_pre in i:
@@ -88,6 +89,22 @@ def copy(origin_path,
 
 
 def trans_ver(version_internal, beta=True):
+    # 新版本，去除主版本号 1.26.0.0 -> 26.0.0
+    ver = version_internal.split(".")
+    ver_1 = int(ver[0])
+    ver_2 = int(ver[1])
+    ver_combine = int(ver[2])
+    ver_3 = ver_combine // 100
+    ver_4 = ver_combine % 100
+    ver = [ver_1, ver_2, ver_3, ver_4]
+    if beta:
+        version = str(ver_2) + "." + str(ver_3) + "." + str(ver_4)
+    else:
+        version = str(ver_2) + "." + str(ver_3)
+    return version, ver
+
+def trans_ver_old(version_internal, beta=True):
+    # 旧版本，不去除主版本号 1.21.0.0 -> 1.21.0.0
     ver = version_internal.split(".")
     ver_1 = int(ver[0])
     ver_2 = int(ver[1])
@@ -168,15 +185,15 @@ def update_info(beta, path, append=None, ver=None, pre=False, git=None, crowdin=
         json.dump(info, f, indent=4) # type: ignore
 
 
-def update_lang(beta=True,
-                target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
-    fd_path, version_in = find(beta)
-    if fd_path is None:
-        return
-    version = trans_ver(version_in, beta)
-    print(version)
-    copy(fd_path, target_path, "text")
-    readme(version, target_path)
+# def update_lang(beta=True,
+#                 target_path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test"):
+#     fd_path, version_in = find(beta)
+#     if fd_path is None:
+#         return
+#     version = trans_ver(version_in, beta)
+#     print(version)
+#     copy(fd_path, target_path, "text")
+#     readme(version, target_path)
 
 
 if __name__ == '__main__':

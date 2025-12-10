@@ -6,15 +6,15 @@ from . import base_fun
 def save(template=None,
          read_dir_path=r"...\MCBE-lang",
          save_path=r"...\MCBE-lang\other\test.lang",
-         zh=False):
+         zh=None):
     def read(folder='text',
              sub_folder="vanilla",
              display='',
              path=r"D:\Users\Economy\Documents\Gitee\MCBE-lang_UPD_test",
              pack_name="Minecraft译名修正",
-             is_zh=False):
-        if is_zh:
-            lang_type = 'zh_CN.lang'
+             zh_type=None):
+        if zh_type is not None:
+            lang_type = f'zh_{zh_type}.lang'
             lang_path = os.path.join(path, folder, sub_folder, lang_type)
         else:
             lang_type = 'en_US.lang'
@@ -44,7 +44,7 @@ def save(template=None,
             for _ii in template[_i]:
                 context = template[_i][_ii]
                 lang_line = read(folder=_i, sub_folder=_ii, display=context['display'],
-                                 path=read_dir_path, is_zh=zh)
+                                 path=read_dir_path, zh_type=zh)
                 if lang_line:
                     f.writelines(lang_line)
 

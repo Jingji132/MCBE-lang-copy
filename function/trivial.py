@@ -1,3 +1,4 @@
+import os.path
 from random import randint
 import requests
 
@@ -32,11 +33,14 @@ def only_zh_upd(diff_list):
 
 def add_bad_translation(template=None,
                         target_path=r"D:\Users\Economy\git\Gitee\MCBE-lang",
-                        zh_merged_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\test\zh_BAD.lang",
-                        csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv"):
-    save(template, target_path, zh_merged_path, zh=True)
-    zh_dict = lang_to_dict(zh_merged_path)
-    csv_add_context(zh_dict, csv_path, '基翻：')
+                        zh_merged_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\test",
+                        csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv",
+                        version = ''):
+    for zh_type in ['CN', 'TW']:
+        merged_path = os.path.join(zh_merged_path, f"{version}_zh_{zh_type}_BAD.lang")
+        save(template, target_path, merged_path, zh=zh_type)
+        zh_dict = lang_to_dict(merged_path)
+        csv_add_context(zh_dict, csv_path, f'zh_{zh_type}：')
 
 
 def lang_init(path=r"D:\Users\Economy\git\Gitee\MCBE-lang-test1"):

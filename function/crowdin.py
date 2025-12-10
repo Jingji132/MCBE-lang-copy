@@ -8,6 +8,7 @@ from crowdin_api.api_resources.source_files.enums import BranchPatchPath
 from crowdin_api.api_resources.source_files.types import BranchPatchRequest
 
 from . import base_fun
+# import base_fun
 
 
 # from crowdin_api.api_resources.source_strings.enums import SourceStringsPatchPath
@@ -22,6 +23,7 @@ def init(version_type='Preview', csv=True):
     # ------------------------csv-----------------------------
     file_dict = get_file(csv)
     branch_dict = get_branch()
+    print(branch_dict)
     branch_id = branch_dict[version_type]
     ver_list = ['Preview', 'Pre-Release', 'Release']
     if version_type in ver_list:
@@ -255,6 +257,6 @@ if __name__ == '__main__':
     # v_n = v_name[0]  # 0 1 2
     # init(v_n, False)
     # test_string()
-    # update_branch(v_n, reset=False)
+    update_branch('Preview','1.21.120.20', reset=True)
     # init('Release')
     # print(client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN'))
