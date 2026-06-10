@@ -1,6 +1,41 @@
+import ctypes
+import os
+import subprocess
+import sys
+
 from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, Generate_Template, \
     base_fun
 
+
+def run_as_admin():
+    """以管理员权限使用 Windows Terminal 重新运行当前脚本"""
+
+    def is_admin():
+        """检查是否具有管理员权限"""
+        try:
+            return ctypes.windll.shell32.IsUserAnAdmin()
+        except:
+            return False
+
+    if not is_admin():
+        # 1. 获取当前脚本的绝对路径
+        script_path = os.path.abspath(sys.argv[0])
+        # 2. 获取当前脚本所在的文件夹路径（解决 System32 路径丢失问题）
+        current_dir = os.path.dirname(script_path)
+        # 3. 获取当前 Python 解释器的绝对路径（解决环境变量找不到 python 的问题）
+        python_exe = sys.executable
+
+        # 核心修复：
+        # -d "{current_dir}" 让 WT 正确切换到你脚本所在的目录
+        # 使用 cmd /k 执行可以完美支持 Python 的 input() 输入交互
+        wt_arguments = f'-d "{current_dir}" cmd /k ""{python_exe}" "{script_path}""'
+
+        # 构建 PowerShell 提权命令
+        ps_command = f'Start-Process -FilePath "wt.exe" -ArgumentList \'{wt_arguments}\' -Verb RunAs'
+
+        # 执行提权
+        subprocess.run(['powershell.exe', '-Command', ps_command], capture_output=True)
+        sys.exit()
 
 def update_mc_lang(beta=True,
                    target_path=r"...\MCBE-lang_UPD_test",
@@ -9,11 +44,11 @@ def update_mc_lang(beta=True,
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
         return
-    if beta:
-        version, ver = Update_Lang.trans_ver(version_in, beta)
-    else:
-        version, ver = Update_Lang.trans_ver_old(version_in, beta)
-    #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 1.21.130更新后移除else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # if beta:
+    version, ver = Update_Lang.trans_ver(version_in, beta)
+    # else:
+    #     version, ver = Update_Lang.trans_ver_old(version_in, beta)
+    # #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 26.0正式版更新前移除else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     print("本机安装版本：", ver)
     info_old = Update_Lang.read_info(beta, target_path, 'object')
     if info_old is None:
@@ -98,17 +133,23 @@ def update_mc_lang(beta=True,
                     print("上一板本已是预发布版，并且已更新过，不再更新！")
                 else:
                     ver_pre = ver_old
-                    version_pre = Update_Lang.version_str(ver_old)
+                    # version_pre = Update_Lang.version_str_ini(ver_old)
+                    version_pre = base_fun.ver_str_dis(ver_pre)
                     Update_Lang.update_info(True, target_path, 'object', ver_pre,
                                             pre=True, crowdin=False, git=False)
 
         if version_pre is None and not info_pre['crowdin']:
             ver_pre = info_pre['ver']
-            version_pre = base_fun.ver_str(ver_pre)
+            version_pre = base_fun.ver_str_dis(ver_pre)
             print("之前有预发布版未更新，即将更新！")
 
         if version_pre is not None:
-            input(f"将更新预发布版：{version_pre}（输入任意内容以继续）")
+            do_update_pre = input(f"将更新预发布版：{version_pre}（Y继续）")
+            if do_update_pre in ['y', 'Y']:
+                pass
+            else:
+                print('更新中断！')
+                return
             preview_reset = True
 
             if not info_pre['git']:
@@ -145,6 +186,7 @@ def update_mc_lang(beta=True,
 
 
 if __name__ == '__main__':
+    run_as_admin()
     main_in = None
     main_beta = None
     while True:

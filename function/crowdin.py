@@ -229,7 +229,7 @@ with open(rf"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config\{config}", "r") as
     config_data = json.load(config_file)
 token = config_data["token"]
 project_id = config_data["project_id"]
-client = crowdin_api.CrowdinClient(token=token, project_id=project_id)
+client = crowdin_api.CrowdinClient(token=token, project_id=project_id, timeout=240)
 
 file_id = 0
 branch_id = 0

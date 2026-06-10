@@ -76,3 +76,10 @@ def ver_str(ver, full=True):
     else:
         version = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2])
     return version
+
+def ver_str_dis(ver, full=True):
+    if full:
+        version = str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
+    else:
+        version = str(ver[1]) + "." + str(ver[2])
+    return version

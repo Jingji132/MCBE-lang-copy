@@ -32,8 +32,11 @@ def processed_to_dict_new(lang_path):
         elif len(line) > 2:
             add_dict[line[0]] = {"text": line[1].replace('\n', ''), "crowdinContext": line[2]}
             # print(line)
-        else:
+        elif len(line) == 2:
+            # print(line)
             add_dict[line[0]] = {"text": line[1].replace('\n', ''), "crowdinContext": ''}
+        else:
+            print(line)
     return add_dict
 
 

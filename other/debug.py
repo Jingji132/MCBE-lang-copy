@@ -7,98 +7,98 @@ import pickle
 from function import Convert_Lang, Produce_Lang, Update_Lang, crowdin
 
 
-def pre_release(ver):
-    """
-    :param ver: '[x, x, x, x]' 想要将Pre-release回退到的版本，如'1.21.0.26'为[1, 21, 0, 26]
-    :return:
-    """
-    version = Update_Lang.version_str(ver)
-    _target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
-    json_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.json"
-
-    Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="",
-                                 json_path=json_path)
-    crowdin.update_branch("Pre-Release", version, reset=False)
-    with open(r"D:\Users\Economy\git\Gitee\MCBE-lang\object\Pre-release", 'wb') as f:
-        pickle.dump(ver, f) # type: ignore
-        f.close()
-
-
-def change_version(ver, ver_type='Preview'):
-    """
-    :param ver_type: 'Preview' 'Release' 'Pre-Release'
-    :param ver: [xx, xx, xx, xx]
-    :return:
-    """
-    version = Update_Lang.version_str(ver)
-    _target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
-    json_path = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver_type}\processed.json"
-
-    Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="",
-                                 json_path=json_path)
-    crowdin.update_branch(ver_type, version, reset=False)
-    with open(rf"D:\Users\Economy\git\Gitee\MCBE-lang\object\{ver_type}", 'wb') as f:
-        pickle.dump(ver, f) # type: ignore
-        f.close()
+# def pre_release(ver):
+#     """
+#     :param ver: '[x, x, x, x]' 想要将Pre-release回退到的版本，如'1.21.0.26'为[1, 21, 0, 26]
+#     :return:
+#     """
+#     version = Update_Lang.version_str(ver)
+#     _target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+#     json_path = r"D:\Users\Economy\git\Gitee\lang-crowdin\Pre-Release\processed.json"
+#
+#     Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="",
+#                                  json_path=json_path)
+#     crowdin.update_branch("Pre-Release", version, reset=False)
+#     with open(r"D:\Users\Economy\git\Gitee\MCBE-lang\object\Pre-release", 'wb') as f:
+#         pickle.dump(ver, f) # type: ignore
+#         f.close()
 
 
-def change_version_obj(ver_name, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object"):
-    path = os.path.join(path, ver_name)
-    with open(path, 'rb+') as f:
-        print(pickle.load(f))
-        f.close()
-    y_o_n = input("修改？(Y)")
-    if y_o_n == 'Y':
-        ver = [0, 0, 0, 0]
-        for i in range(4):
-            ver[i] = int(input(f"第{i}位版本："))
-        with open(path, 'wb') as f:
-            pickle.dump(ver, f) # type: ignore
-            f.close()
-
-
-def show_object(path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object"):
-    p_list = os.listdir(path)
-    print('list:\t', p_list, '\n')
-    for filename in p_list:
-        filepath = os.path.join(path, filename)
-        with open(filepath, 'rb+') as f:
-            obj = pickle.load(f)
-            print(filename, ':\t', obj, '\ttype:', type(obj))
-            f.close()
-
-
-target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
-
-
-def info_o2n():
-    p = Update_Lang.read_info(True, target_path, 'object')
-    r = Update_Lang.read_info(False, target_path, 'object')
-    pr = Update_Lang.read_info(True, target_path, 'object', pre=True)
-
-    new = {'Preview': p, 'Release': r, 'Pre-release': pr}
-    print(new)
-
-    with open(rf'{target_path}/object/Version_info.json', 'w+', encoding='utf-8') as f:
-        json.dump(new, f, indent=4) # type: ignore
-
-
-def get_translation_csv(path):
-    Produce_Lang.process(path, r'../temp/trans_pro.lang')
-    trans_dict = Convert_Lang.processed_to_dict(r'../temp/trans_pro.lang')
-    # print(trans_dict)
-    headers = ['Key', 'Source string', 'Context', 'Translation']
-    rows = []
-    for key in trans_dict:
-        if '.' in key:
-            s_key = '"' + key + '"'
-        else:
-            s_key = key
-        rows.append((s_key, None, None, trans_dict[key]))
-    with open(r'../temp/trans_out.csv', 'w+', encoding='utf-8', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(headers)
-        writer.writerows(rows)
+# def change_version(ver, ver_type='Preview'):
+#     """
+#     :param ver_type: 'Preview' 'Release' 'Pre-Release'
+#     :param ver: [xx, xx, xx, xx]
+#     :return:
+#     """
+#     version = Update_Lang.version_str(ver)
+#     _target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+#     json_path = fr"D:\Users\Economy\git\Gitee\lang-crowdin\{ver_type}\processed.json"
+#
+#     Convert_Lang.process_en_json(f"{version}_processed.lang", path=_target_path, path_append="",
+#                                  json_path=json_path)
+#     crowdin.update_branch(ver_type, version, reset=False)
+#     with open(rf"D:\Users\Economy\git\Gitee\MCBE-lang\object\{ver_type}", 'wb') as f:
+#         pickle.dump(ver, f) # type: ignore
+#         f.close()
+#
+#
+# def change_version_obj(ver_name, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object"):
+#     path = os.path.join(path, ver_name)
+#     with open(path, 'rb+') as f:
+#         print(pickle.load(f))
+#         f.close()
+#     y_o_n = input("修改？(Y)")
+#     if y_o_n == 'Y':
+#         ver = [0, 0, 0, 0]
+#         for i in range(4):
+#             ver[i] = int(input(f"第{i}位版本："))
+#         with open(path, 'wb') as f:
+#             pickle.dump(ver, f) # type: ignore
+#             f.close()
+#
+#
+# def show_object(path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object"):
+#     p_list = os.listdir(path)
+#     print('list:\t', p_list, '\n')
+#     for filename in p_list:
+#         filepath = os.path.join(path, filename)
+#         with open(filepath, 'rb+') as f:
+#             obj = pickle.load(f)
+#             print(filename, ':\t', obj, '\ttype:', type(obj))
+#             f.close()
+#
+#
+# target_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+#
+#
+# def info_o2n():
+#     p = Update_Lang.read_info(True, target_path, 'object')
+#     r = Update_Lang.read_info(False, target_path, 'object')
+#     pr = Update_Lang.read_info(True, target_path, 'object', pre=True)
+#
+#     new = {'Preview': p, 'Release': r, 'Pre-release': pr}
+#     print(new)
+#
+#     with open(rf'{target_path}/object/Version_info.json', 'w+', encoding='utf-8') as f:
+#         json.dump(new, f, indent=4) # type: ignore
+#
+#
+# def get_translation_csv(path):
+#     Produce_Lang.process(path, r'../temp/trans_pro.lang')
+#     trans_dict = Convert_Lang.processed_to_dict(r'../temp/trans_pro.lang')
+#     # print(trans_dict)
+#     headers = ['Key', 'Source string', 'Context', 'Translation']
+#     rows = []
+#     for key in trans_dict:
+#         if '.' in key:
+#             s_key = '"' + key + '"'
+#         else:
+#             s_key = key
+#         rows.append((s_key, None, None, trans_dict[key]))
+#     with open(r'../temp/trans_out.csv', 'w+', encoding='utf-8', newline='') as f:
+#         writer = csv.writer(f)
+#         writer.writerow(headers)
+#         writer.writerows(rows)
 
 
 if __name__ == '__main__':

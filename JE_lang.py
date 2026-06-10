@@ -106,6 +106,16 @@ def translate_memory2(en, zh, tw, _path, name):
         writer.writerow(headers)
         writer.writerows(rows)
 
+def translate_memory_issue(en, zh, tw, _path, name):
+    headers = ['key', 'en-US', 'zh-CN', 'zh-TW']
+    rows = []
+    for key in zh:
+        rows.append((key, en[key], zh[key], tw[key]))
+    _path = os.path.join(_path, name)
+    with open(_path, 'w', encoding='utf-8', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(headers)
+        writer.writerows(rows)
 
 if __name__ == '__main__':
     # en_us, zh_cn, zh_tw = find_je_lang(ver='1.12.2', idx='1.12')
@@ -114,3 +124,4 @@ if __name__ == '__main__':
     # create_lang(en_us, path, 'en_US.lang')
     # create_lang(zh_cn, path, 'zh_CN.lang')
     translate_memory2(en_us, zh_cn, zh_tw, path, 'output.csv')
+    translate_memory_issue(en_us, zh_cn, zh_tw, path, 'issue.csv')

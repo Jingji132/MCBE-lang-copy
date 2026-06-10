@@ -103,26 +103,29 @@ def trans_ver(version_internal, beta=True):
         version = str(ver_2) + "." + str(ver_3)
     return version, ver
 
-def trans_ver_old(version_internal, beta=True):
-    # 旧版本，不去除主版本号 1.21.0.0 -> 1.21.0.0
-    ver = version_internal.split(".")
-    ver_1 = int(ver[0])
-    ver_2 = int(ver[1])
-    ver_combine = int(ver[2])
-    ver_3 = ver_combine // 100
-    ver_4 = ver_combine % 100
-    ver = [ver_1, ver_2, ver_3, ver_4]
-    if beta:
-        version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3) + "." + str(ver_4)
-    else:
-        version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3)
-    return version, ver
+# def trans_ver_old(version_internal, beta=True):
+#     # 旧版本，不去除主版本号 1.21.0.0 -> 1.21.0.0
+#     ver = version_internal.split(".")
+#     ver_1 = int(ver[0])
+#     ver_2 = int(ver[1])
+#     ver_combine = int(ver[2])
+#     ver_3 = ver_combine // 100
+#     ver_4 = ver_combine % 100
+#     ver = [ver_1, ver_2, ver_3, ver_4]
+#     if beta:
+#         version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3) + "." + str(ver_4)
+#     else:
+#         version = str(ver_1) + "." + str(ver_2) + "." + str(ver_3)
+#     return version, ver
 
+
+# def version_str_ini(ver):
+#     version_read = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
+#     return version_read
 
 def version_str(ver):
-    version_read = str(ver[0]) + "." + str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
+    version_read = str(ver[1]) + "." + str(ver[2]) + "." + str(ver[3])
     return version_read
-
 
 def readme(version_read, target_path):
     readme_path = os.path.join(target_path, "README.md")

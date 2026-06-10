@@ -175,8 +175,8 @@ def pre_tag(repo_path, ver):
     :param target_branch: 要合并进去的分支
     :param ver: 版本号元组/列表，如 (1,21,110,26)
     """
-    ver_long  = base_fun.ver_str(ver)        # 1.21.110.26
-    ver_short = base_fun.ver_str(ver, False) # 1.21.110
+    ver_long  = base_fun.ver_str_dis(ver)        # 26.110.26
+    ver_short = base_fun.ver_str_dis(ver, False) # 26.110
 
     repo = Repo(repo_path)
     repo.create_tag(f"{ver_short}-pre", ref=ver_long)
