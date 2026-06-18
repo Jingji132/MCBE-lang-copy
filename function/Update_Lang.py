@@ -13,8 +13,7 @@ def find(beta=True):
     if beta:
         name_pre = "Microsoft.MinecraftWindowsBeta_"
     else:
-        # name_pre = "Microsoft.MinecraftUWP_"
-        name_pre = "MICROSOFT.MINECRAFTUWP_"
+        name_pre = "Microsoft.MinecraftUWP_"
     folder_name = None
     for i in find_list:
         if name_pre in i:

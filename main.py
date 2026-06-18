@@ -163,8 +163,8 @@ def update_mc_lang(beta=True,
             trivial.add_bad_translation(template, target_path,
                                         rf"{target_path}\process file\{version_pre}_zh_BAD.lang",
                                         processed_path)
-            crowdin.update_branch("Pre-Release", version_pre, reset=False)
-            Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, crowdin=True)
+            if crowdin.update_branch("Pre-Release", version_pre, reset=False):
+                Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, crowdin=True)
 
         # 更新Crowdin
         processed_path = rf"{crowdin_path}\{version_type}\processed.csv"
@@ -174,8 +174,8 @@ def update_mc_lang(beta=True,
         trivial.add_bad_translation(template, target_path,
                                     rf"{target_path}\process file",
                                     processed_path, version)
-        crowdin.update_branch(version_type, version, reset=preview_reset)
-        Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
+        if crowdin.update_branch(version_type, version, reset=preview_reset):
+            Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
 
