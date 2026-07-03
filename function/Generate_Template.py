@@ -55,25 +55,25 @@ d_t_json = {
 }
 
 
-def read(origin_path=r"...\MCBE-lang_UPD_test", append='object'):
-    """
-    旧版本，即将弃用，迭代：read_json
-    """
-    if append is not None:
-        origin_path = os.path.join(origin_path, append)
-    template_file = os.path.join(origin_path, "template")
-    try:
-        if os.path.isfile(template_file):
-            with open(template_file, 'rb+') as f:
-                template = pickle.load(f)
-                f.close()
-        else:
-            print("未找到模板文件，将替换为默认模板！")
-            template = default_template
-    except EOFError:
-        print("出错了，将替换为默认模板！")
-        template = default_template
-    return template
+# def read(origin_path=r"...\MCBE-lang_UPD_test", append='object'):
+#     """
+#     旧版本，即将弃用，迭代：read_json
+#     """
+#     if append is not None:
+#         origin_path = os.path.join(origin_path, append)
+#     template_file = os.path.join(origin_path, "template")
+#     try:
+#         if os.path.isfile(template_file):
+#             with open(template_file, 'rb+') as f:
+#                 template = pickle.load(f)
+#                 f.close()
+#         else:
+#             print("未找到模板文件，将替换为默认模板！")
+#             template = default_template
+#     except EOFError:
+#         print("出错了，将替换为默认模板！")
+#         template = default_template
+#     return template
 
 
 def read_json(path=r"...\MCBE-lang_UPD_test\object\template.json"):
@@ -187,7 +187,7 @@ def old_to_new(old):
 #     return template
 
 
-def update_json(beta, path=r"...\MCBE-lang_UPD_test", deny_list=None, pre=False):
+def update_json(beta, path=r"...\MCBE-lang_UPD_test", deny_list=None, ver=None):
     def ensure_display(display_):
         while True:
             ensure_in = input(f"将显示为“{display_.replace('_', ' ').title()}”，确定？（Y/n）")
@@ -235,8 +235,11 @@ def update_json(beta, path=r"...\MCBE-lang_UPD_test", deny_list=None, pre=False)
                 if not os.path.exists(path_ii):
                     template[_i][_ii][beta_str] = False
                     print(rf"未找到模板中的文件夹：'{path_i}\{path_ii}'，已标记")
-                    if not (template[_i][_ii]['release'] or template[_i][_ii]['preview']):
-                        input(rf"将删除'{path_i}\{path_ii}'！")
+                    if beta:
+                        template[_i][_ii]['ver'] = ver
+                        print(rf"'{path_i}\{path_ii}'已标记预览版本{ver}")
+                    elif not (template[_i][_ii]['release'] or template[_i][_ii]['preview']) and base_fun.compare_ver(ver, template[_i][_ii]['ver']):
+                        input(rf"{ver}超过预览版本{template[_i][_ii]['ver']}，将删除'{path_i}\{path_ii}'！")
                         del_list.append([_i, _ii])
         else:
             print(rf"未找到模板中的主文件夹：'{path_i}'，已跳过")

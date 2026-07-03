@@ -92,7 +92,7 @@ def update_mc_lang(beta=True,
     # trivial.update_custom_tips(target_path)
 
     # 更新模板
-    template = Generate_Template.update_json(beta, target_path)
+    template = Generate_Template.update_json(beta, target_path, ver=ver)
 
     # 修改模板（已弃用），模板已改为json格式，可手动修改
     # if mod:
