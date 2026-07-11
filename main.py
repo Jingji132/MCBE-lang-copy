@@ -44,11 +44,7 @@ def update_mc_lang(beta=True,
     fd_path, version_in = Update_Lang.find(beta)
     if fd_path is None:
         return
-    # if beta:
     version, ver = Update_Lang.trans_ver(version_in, beta)
-    # else:
-    #     version, ver = Update_Lang.trans_ver_old(version_in, beta)
-    # #     !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 26.0正式版更新前移除else !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     print("本机安装版本：", ver)
     info_old = Update_Lang.read_info(beta, target_path, 'object')
     if info_old is None:
@@ -89,16 +85,8 @@ def update_mc_lang(beta=True,
 
         Update_Lang.update_info(beta, target_path, 'object', git=True)
 
-    # 更新tips序号（目前无需此操作）
-    # trivial.update_custom_tips(target_path)
-
     # 更新模板
     template = Generate_Template.update_json(beta, target_path, ver=ver)
-
-    # 修改模板（已弃用），模板已改为json格式，可手动修改
-    # if mod:
-    #     Generate_Template.modify(target_path)
-    #     template = Generate_Template.read(target_path)
 
     # 生成处理文件
     merged_file = f"{version}_merged.lang"
@@ -179,11 +167,6 @@ def update_mc_lang(beta=True,
             Update_Lang.update_info(beta, target_path, 'object', crowdin=True)
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
-
-    # 更新版本信息
-    # upd_success = input("更新版本号？(Y/N)")
-    # if compare:
-    #     Update_Lang.update_info(beta, target_path, ver, 'object')
 
 
 if __name__ == '__main__':
