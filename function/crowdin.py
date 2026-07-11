@@ -13,15 +13,16 @@ from . import base_fun
 # 全局变量初始化
 file_id = 0
 branch_id = 0
+csv_name = "None"
 file_name = "None"
 
 
 # ==================== 核心逻辑函数 ====================
-
 def init(version_type='Preview', csv=True):
     """初始化 Crowdin 分支与文件配置，具备网络异常拦截功能"""
     global file_name, file_id, branch_id
-    file_name = fr"D:\Users\Economy\git\Gitee\{git_re}\{version_type}\processed.csv"
+    file_name = fr"{csv_name}\{version_type}\processed.csv"
+    print(csv_name, version_type, file_name)
 
     # 1. 获取远程分支字典
     branch_dict = get_branch()
@@ -255,21 +256,12 @@ else:
 # 消除不安全证书警告
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-# 加载 Token 资产
-config_path = rf"config\{config}"
-try:
-    with open(config_path, "r") as config_file:
-        config_data = json.load(config_file)
-    token = config_data["token"]
-    project_id = config_data["project_id"]
-except FileNotFoundError:
-    print(f"❌ 错误：未找到配置文件 {config_path}")
-    token = ""
-    project_id = 0
+def init_conf(token, id):
+    global client
+    # 创建唯一的 API 客户端实例
+    client = crowdin_api.CrowdinClient(token=token, project_id=id, timeout=240)
 
-# 创建唯一的 API 客户端实例
-client = crowdin_api.CrowdinClient(token=token, project_id=project_id, timeout=240)
-
+global client
 
 if __name__ == '__main__':
     # 测试主入口

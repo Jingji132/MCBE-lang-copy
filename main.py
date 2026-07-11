@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 from function import trivial, Convert_Lang, crowdin, git_fun, Produce_Lang, Update_Lang, Generate_Template, \
-    base_fun
+    base_fun, config
 
 
 def run_as_admin():
@@ -102,6 +102,7 @@ def update_mc_lang(beta=True,
     if compare or not info_old['crowdin'] or not info_pre['crowdin']:
         preview_reset = False
         ver_pre = None
+        crowdin.csv_name = crowdin_path
         if beta:
             diff_list = git_fun.diff_info(git_fun.diff(target_path), ver, fr"{target_path}\object\diff_info")
             print(diff_list)
@@ -132,7 +133,7 @@ def update_mc_lang(beta=True,
             version_pre = base_fun.ver_str_dis(ver_pre)
             print("之前有预发布版未更新，即将更新！")
 
-        if version_pre is not None:
+        if version_pre is not None and not git_fun.git_init:
             do_update_pre = input(f"将更新预发布版：{version_pre}（Y继续）")
             if do_update_pre in ['y', 'Y']:
                 pass
@@ -168,9 +169,13 @@ def update_mc_lang(beta=True,
 
         # 等待Preview更新完成后再将Pre-release标记为更新完成
 
-
+global conf
 if __name__ == '__main__':
     run_as_admin()
+    # global conf
+    conf = config.init_config(r'config/config1.json')
+    crowdin.init_conf(conf.crowdin_token, conf.crowdin_project_id)
+
     # main_in = None
     main_beta = None
     while True:
@@ -183,17 +188,17 @@ if __name__ == '__main__':
             break
         else:
             print('输入有误，请重新输入！')
-    # 提取语言文件位置（git位置）
-    tg_path = r"D:\Documents\GitHub\MCBE-lang"
-    '''
-        可选择fork https://github.com/Jingji132/MCBE-lang后将仓库下载至本地，将以上路径设置为仓库路径
-    '''
+    # # 提取语言文件位置（git位置）
+    # tg_path = r"D:\Documents\GitHub\MCBE-lang"
+    # '''
+    #     可选择fork https://github.com/Jingji132/MCBE-lang后将仓库下载至本地，将以上路径设置为仓库路径
+    # '''
     # csv文件位置（用于上传crowdin）
-    csv_path = r"D:\Users\Economy\git\Gitee\lang-crowdin"
+    # csv_path = r"D:\Users\Economy\git\Gitee\lang-crowdin"
 
-    update_mc_lang(target_path=tg_path,  # 提取语言文件至该路径
+    update_mc_lang(target_path=conf.target_path,  # 提取语言文件至该路径
                    beta=main_beta,  # True:将提取Preview  False:将提取Release
-                   crowdin_path=csv_path
+                   crowdin_path=conf.csv_path
                    # mod=True  # 是否修改模板
                    )
 

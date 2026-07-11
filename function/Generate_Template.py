@@ -11,9 +11,6 @@ default_template = [
         ["persona", 0, 0],
         ["editor", 0, 0],
         ["chemistry", 0, 0],
-    ],
-    [
-        ["custom", 0, "other"]
     ]
 ]
 
@@ -44,13 +41,6 @@ d_t_json = {
             "release": None,
             "preview": None
         },
-    },
-    "other": {
-        "hidden": {
-            "display": "",
-            "release": None,
-            "preview": None
-        }
     }
 }
 

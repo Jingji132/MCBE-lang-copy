@@ -1,24 +1,58 @@
 import os
 import pickle
 
-from git import Repo
+from git import Repo, InvalidGitRepositoryError
 
 from . import base_fun
 # import base_fun
+global repo, git_init
+
+def init_repo(repo_path):
+    """初始化一个新的Git仓库"""
+    # 确保目录存在
+    base_fun.make_dir(repo_path)
+
+    # 初始化仓库
+    rp = Repo.init(repo_path)
+    readme = os.path.join(repo_path, "README.md")
+    with open(readme, 'w+') as f:
+        f.write("# Language files in Minecraft BE(en_US/zh_CN)\nVersion: 0.0.0")
+
+    rp.git.add('.')
+    rp.index.commit("Initial commit")
+    print(f"已创建初始提交")
+
+    print(f"已初始化新仓库: {repo_path}")
+    return rp
 
 
 def switch(repo_path, new_branch):
-    global repo
+    global repo, git_init
+    git_init = False
     try:
         repo = Repo(repo_path)
+    except InvalidGitRepositoryError:
+        # 仓库不存在，初始化
+        print(f"仓库不存在，正在初始化: {repo_path}")
+        repo = init_repo(repo_path)
+        git_init = True
     except Exception as e:
-        print(f"git仓库路径有误：{str(e)}")
+        print(f"git仓库路径有误，且未初始化：{str(e)}")
         return None
     try:
         repo.git.checkout(new_branch)
     except Exception as e:
         print(f"不存在分支：{new_branch}\n{str(e)}")
-        return None
+        try:
+            # 创建新分支（基于当前HEAD）
+            print(f"正在创建分支: {new_branch}")
+            new_branch_obj = repo.create_head(new_branch)
+            new_branch_obj.checkout()
+            print(f"已创建并切换到分支: {new_branch}")
+            return True
+        except Exception as create_error:
+            print(f"创建分支失败: {create_error}")
+            return None
     return True
 
 
