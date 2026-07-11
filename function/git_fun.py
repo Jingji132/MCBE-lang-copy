@@ -8,11 +8,18 @@ from . import base_fun
 
 
 def switch(repo_path, new_branch):
-    repo = Repo(repo_path)
+    global repo
+    try:
+        repo = Repo(repo_path)
+    except Exception as e:
+        print(f"git仓库路径有误：{str(e)}")
+        return None
     try:
         repo.git.checkout(new_branch)
     except Exception as e:
         print(f"不存在分支：{new_branch}\n{str(e)}")
+        return None
+    return True
 
 
 def commit(repo_path, file_path='.', commit_message='Update'):
@@ -95,7 +102,11 @@ def diff_info(list_new, ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\
         else:
             print("diff_info: Format incorrect")
     else:
-        print("diff_info: Not found")
+        info = {'ver': ver, 'list': list_new}
+        with open(path, 'wb') as f:
+            pickle.dump(info, f)  # type: ignore
+            f.close()
+        return info['list']
 
 def edit_diff_info(ver, path=r"D:\Users\Economy\git\Gitee\MCBE-lang\object\diff_info"):
     if os.path.isfile(path):

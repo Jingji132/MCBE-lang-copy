@@ -73,7 +73,8 @@ def update_mc_lang(beta=True,
         version_type = "Preview"
     else:
         version_type = "Release"
-    git_fun.switch(target_path, version_type)
+    if not git_fun.switch(target_path, version_type):
+        return
 
     if compare or not info_old['git']:
         # 复制文件
@@ -114,7 +115,7 @@ def update_mc_lang(beta=True,
         preview_reset = False
         ver_pre = None
         if beta:
-            diff_list = git_fun.diff_info(git_fun.diff(), ver)
+            diff_list = git_fun.diff_info(git_fun.diff(target_path), ver, fr"{target_path}\object\diff_info")
             print(diff_list)
             ver_pre = info_pre['ver']
             # print(trivial.only_zh_upd(diff_list) and Update_Lang.compare_ver(ver, ver_pre, complex_return=False))
@@ -187,7 +188,7 @@ def update_mc_lang(beta=True,
 
 if __name__ == '__main__':
     run_as_admin()
-    main_in = None
+    # main_in = None
     main_beta = None
     while True:
         main_in = input("检测更新的版本（0:Preview 1:Release）：")
@@ -200,7 +201,7 @@ if __name__ == '__main__':
         else:
             print('输入有误，请重新输入！')
     # 提取语言文件位置（git位置）
-    tg_path = r"D:\Users\Economy\git\Gitee\MCBE-lang"
+    tg_path = r"D:\Documents\GitHub\MCBE-lang"
     '''
         可选择fork https://github.com/Jingji132/MCBE-lang后将仓库下载至本地，将以上路径设置为仓库路径
     '''

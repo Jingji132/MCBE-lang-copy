@@ -256,7 +256,7 @@ else:
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 加载 Token 资产
-config_path = rf"D:\Users\Economy\git\Gitee\mcbe-lang-copy\config\{config}"
+config_path = rf"config\{config}"
 try:
     with open(config_path, "r") as config_file:
         config_data = json.load(config_file)

@@ -80,6 +80,7 @@ def process_csv(input_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0 r
     else:
         for key in the_dict:
             rows.append((key, the_dict[key]['text'], the_dict[key]['crowdinContext']))
+    base_fun.make_dir_path(output_path)
     with open(output_path, 'w+', encoding='utf-8', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(headers)
