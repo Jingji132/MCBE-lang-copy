@@ -1,7 +1,7 @@
 import os
 import pickle
 
-from git import Repo, InvalidGitRepositoryError
+from git import Repo, InvalidGitRepositoryError, GitCommandError
 
 from . import base_fun
 # import base_fun
@@ -180,7 +180,11 @@ def tag(repo_path, tag_name):
         # 如果当前在分支上，获取分支的最新提交哈希值
         _commit = repo.head.ref.commit
     # tag_name = 'version-test'
-    repo.create_tag(tag_name, _commit, message=tag_name)
+    try:
+        repo.create_tag(tag_name, _commit, message=tag_name)
+    except GitCommandError as e:
+        print('git标签出错，已跳过')
+        pass
 
 
 # def pre_tag(repo_path, _target_branch, ver):
@@ -224,8 +228,13 @@ def pre_tag(repo_path, ver):
     ver_short = base_fun.ver_str_dis(ver, False) # 26.110
 
     repo = Repo(repo_path)
-    repo.create_tag(f"{ver_short}-pre", ref=ver_long)
-    print(f"新标签 {ver_short}-pre 已创建")
+    try:
+        repo.create_tag(f"{ver_short}-pre", ref=ver_long)
+        print(f"新标签 {ver_short}-pre 已创建")
+    except GitCommandError as e:
+        print('git标签出错，已跳过')
+        pass
+
 
 if __name__ == '__main__':
     # pre_tag(r"D:\Users\Economy\git\Gitee\MCBE-lang", "Preview", [1,21,110,26])

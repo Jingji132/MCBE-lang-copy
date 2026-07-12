@@ -66,9 +66,13 @@ def lang_to_dict(lang_path):
 
 def process_csv(input_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\other\1.21.0 release_processed.lang",
                 output_path=r"D:\Users\Economy\git\Gitee\lang-crowdin1\Preview\processed.csv",
-                special_key=True):
+                special_key=True,
+                debug = False,
+                version = '0.0.0'):
     headers = ['Key', 'Source string', 'Context', 'Translation']
     the_dict = processed_to_dict_new(input_path)
+    if debug:
+        the_dict = base_fun.sample_and_ver(the_dict, version)
     rows = []
     if special_key:
         for key in the_dict:

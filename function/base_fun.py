@@ -1,4 +1,4 @@
-import os.path
+import os.path, random
 
 
 def make_dir(path):
@@ -83,3 +83,22 @@ def ver_str_dis(ver, full=True):
     else:
         version = str(ver[1]) + "." + str(ver[2])
     return version
+
+def sample_dict(d, ratio:float=0.001):
+    if not d:
+        return {}
+    k = max(1, int(len(d) * ratio))
+    selected_keys = random.sample(list(d.keys()), min(k, len(d)))
+    return {key: d[key] for key in selected_keys}
+def sample_and_ver(d:dict, version:str='0.0.0'):
+    d1=sample_dict(d)
+    d1['version.name']={'text':version, 'crowdinContext':'string for debug'}
+    return d1
+
+
+if __name__ == '__main__':
+    dd = {i: f"value_{i}" for i in range(5000)}
+    dd2 = sample_dict(dd)
+    print(len(dd),"\n",len(dd2))
+    # print(sample_dict(dd))
+    pass

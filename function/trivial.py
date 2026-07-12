@@ -2,6 +2,7 @@ import os.path
 from random import randint
 import requests
 
+from .base_fun import sample_dict
 from .Convert_Lang import lang_to_dict, csv_add_context
 from .Produce_Lang import save
 from .Update_Lang import update_info

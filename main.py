@@ -105,7 +105,7 @@ def update_mc_lang(beta=True,
         crowdin.csv_name = crowdin_path
         if beta:
             diff_list = git_fun.diff_info(git_fun.diff(target_path), ver, fr"{target_path}\object\diff_info")
-            print(diff_list)
+            # print(diff_list)
             ver_pre = info_pre['ver']
             # print(trivial.only_zh_upd(diff_list) and Update_Lang.compare_ver(ver, ver_pre, complex_return=False))
             if trivial.only_zh_upd(diff_list):
@@ -133,7 +133,7 @@ def update_mc_lang(beta=True,
             version_pre = base_fun.ver_str_dis(ver_pre)
             print("之前有预发布版未更新，即将更新！")
 
-        if version_pre is not None and not git_fun.git_init:
+        if version_pre is not None and ver_pre[0]!=0:
             do_update_pre = input(f"将更新预发布版：{version_pre}（Y继续）")
             if do_update_pre in ['y', 'Y']:
                 pass
@@ -149,10 +149,10 @@ def update_mc_lang(beta=True,
             processed_path = rf"{crowdin_path}\Pre-Release\processed.csv"
             Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version_pre}_processed.lang",
                                      output_path=processed_path,
-                                     special_key=True)
+                                     special_key=True, debug=conf.debug, version=version_pre)
             trivial.add_bad_translation(template, target_path,
-                                        rf"{target_path}\process file\{version_pre}_zh_BAD.lang",
-                                        processed_path)
+                                        rf"{target_path}\process file",
+                                        processed_path, version_pre)
             if crowdin.update_branch("Pre-Release", version_pre, reset=False):
                 Update_Lang.update_info(beta, target_path, 'object', ver_pre, pre=True, crowdin=True)
 
@@ -160,7 +160,7 @@ def update_mc_lang(beta=True,
         processed_path = rf"{crowdin_path}\{version_type}\processed.csv"
         Convert_Lang.process_csv(input_path=rf"{target_path}\process file\{version}_processed.lang",
                                  output_path=processed_path,
-                                 special_key=True)
+                                 special_key=True, debug=conf.debug, version=version)
         trivial.add_bad_translation(template, target_path,
                                     rf"{target_path}\process file",
                                     processed_path, version)
@@ -172,7 +172,6 @@ def update_mc_lang(beta=True,
 global conf
 if __name__ == '__main__':
     run_as_admin()
-    # global conf
     conf = config.init_config(r'config/config1.json')
     crowdin.init_conf(conf.crowdin_token, conf.crowdin_project_id)
 
