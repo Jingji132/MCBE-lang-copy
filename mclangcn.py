@@ -1,7 +1,7 @@
-from function.crowdin import download_translate
+from function.crowdin import download_translate, init_conf, init
 from function.Convert_Lang import csv_to_lang, json_to_lang
 from function.Update_Lang import version_str, read_info
-
+from function import config
 
 def crowdin_to_mclangcn_json(_pre=True):
     if _pre:
@@ -34,6 +34,9 @@ def crowdin_to_mclangcn_csv(_pre=True, lang_type='zh_CN'):
     csv_to_lang(path1, path2, path3)
 
 if __name__ == '__main__':
+    conf = config.init_config(r'config/config.json')
+    init_conf(conf.crowdin_token, conf.crowdin_project_id)
+    # init()
     pre = True
     download_translate(pre)
     crowdin_to_mclangcn_csv(pre)

@@ -110,7 +110,7 @@ def update_file():
 
 def reset_file():
     """使用预设模板重置云端文件"""
-    reset_file_name = fr"D:\Users\Economy\git\Gitee\{git_re}\preset\processed.csv"
+    reset_file_name = fr"D:\Documents\GitHub\{git_re}\preset\processed.csv"
     storage = client.storages.add_storage(open(reset_file_name, 'rb'))
     client.source_files.update_file(file_id, storage['data']['id'])
     print("🔄 文件初始化重置完成！")
@@ -206,7 +206,7 @@ def download_translate(pre=True):
     response_zh_tw = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-TW')
     client.translations.list_project_builds()
 
-    file_path = fr"D:\Users\Economy\git\Gitee\{git_re}\{ver}\download"
+    file_path = fr"D:\Documents\GitHub\{git_re}\{ver}\download"
     file_zh_cn = fr"{file_path}\zh_CN.csv"
     file_zh_tw = fr"{file_path}\zh_TW.csv"
     base_fun.make_dir(file_path)

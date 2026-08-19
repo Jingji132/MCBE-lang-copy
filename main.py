@@ -172,7 +172,7 @@ def update_mc_lang(beta=True,
 global conf
 if __name__ == '__main__':
     run_as_admin()
-    conf = config.init_config(r'config/config1.json')
+    conf = config.init_config(r'config/config.json')
     crowdin.init_conf(conf.crowdin_token, conf.crowdin_project_id)
 
     # main_in = None
