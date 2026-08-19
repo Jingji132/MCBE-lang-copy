@@ -203,16 +203,16 @@ def download_translate(pre=True):
         return
 
     response_zh_cn = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-CN')
-    response_zh_tw = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-TW')
+    # response_zh_tw = client.translations.build_project_file_translation(file_id, targetLanguageId='zh-TW')
     client.translations.list_project_builds()
 
     file_path = fr"D:\Documents\GitHub\{git_re}\{ver}\download"
     file_zh_cn = fr"{file_path}\zh_CN.csv"
-    file_zh_tw = fr"{file_path}\zh_TW.csv"
+    # file_zh_tw = fr"{file_path}\zh_TW.csv"
     base_fun.make_dir(file_path)
 
     response_zh_cn = requests.get(response_zh_cn['data']['url'])
-    response_zh_tw = requests.get(response_zh_tw['data']['url'])
+    # response_zh_tw = requests.get(response_zh_tw['data']['url'])
 
     def download_csv(response, file):
         if response.status_code == 200:
@@ -223,7 +223,7 @@ def download_translate(pre=True):
             print(f"❌ 链路请求失败，{file} 下载未响应")
 
     download_csv(response_zh_cn, file_zh_cn)
-    download_csv(response_zh_tw, file_zh_tw)
+    # download_csv(response_zh_tw, file_zh_tw)
 
 
 # ==================== 客户端环境初始化 ====================

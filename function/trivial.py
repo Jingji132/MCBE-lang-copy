@@ -37,7 +37,8 @@ def add_bad_translation(template=None,
                         zh_merged_path=r"D:\Users\Economy\git\Gitee\MCBE-lang\test",
                         csv_path=r"D:\Users\Economy\git\Gitee\lang-crowdin\Preview\processed.csv",
                         version = ''):
-    for zh_type in ['CN', 'TW']:
+    # for zh_type in ['CN', 'TW']:
+    for zh_type in ['CN']:
         merged_path = os.path.join(zh_merged_path, f"{version}_zh_{zh_type}_BAD.lang")
         save(template, target_path, merged_path, zh=zh_type)
         zh_dict = lang_to_dict(merged_path)
